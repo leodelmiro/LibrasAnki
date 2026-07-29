@@ -1,0 +1,20 @@
+# Pronomes pessoais
+#
+# Em LIBRAS o pronome é apontar: para a pessoa presente, ou para um ponto no
+# espaço já reservado para quem não está. O mesmo espaço marca se é singular
+# ou plural (apontar de novo pra 2, 3, 4 pontos ou varrer um grupo) e se quem
+# fala está incluído ou não (nós inclusivo vs. eles).
+#
+# O pronome de 3ª pessoa não marca gênero: ELE e ELA são o mesmo sinal, e o
+# mesmo vale no plural, ELES e ELAS. Por isso as quatro palavras abaixo caem
+# no mesmo card — é a gramática da língua, não falha de busca (ver SINONIMOS
+# em indice.py).
+
+eu
+você
+ele
+ela
+nós
+vocês
+eles
+elas

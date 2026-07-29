@@ -1,0 +1,22 @@
+# Frases — pronomes pessoais, possessivos e interrogativos
+#
+# Para acrescentar a glosa em LIBRAS quando a professora passar, use "|":
+#
+#     Ele é meu amigo | ELE AMIGO ELE-DELE
+#
+# Cobertura medida destas 10 frases: 29 de 33 palavras (88%).
+# Ausentes: "Por" e "Libras" são falsos amigos bloqueados de propósito (ver
+# indice.py) — o INES tem verbete pra eles, só que com sentido errado. "média"
+# e "kg" são lacuna real: não têm sinal cadastrado no INES.
+
+Ele é meu amigo.
+Ela é minha mãe.
+O cachorro é dela.
+
+O que você gosta de fazer?
+O que você gosta de comer?
+Onde você gosta de passear?
+Quem mora com você?
+Por que você estuda Libras?
+Como você vai trabalhar?
+Quanto é em média um kg de carne?

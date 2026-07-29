@@ -1,0 +1,29 @@
+# Pronomes interrogativos
+#
+# QUAL, QUEM, COMO e QUANDO têm mais de um verbete no INES porque o sinal
+# muda com o contexto da pergunta — não é ambiguidade da busca, é o
+# dicionário registrando sinais diferentes:
+#
+#     qual    identificar um local / diferenciar um local do outro / preferência
+#     quem    identificar dono / identificar autor / identificar ou nominar alguém
+#     como    "do mesmo modo" / pergunta "de que modo?"
+#     quando  época de um acontecimento / data de um acontecimento passado
+#
+# QUÊ cobre o "o que" falado no dia a dia (INES só tem a forma sem "o").
+#
+# "Por que" fica de fora: o INES tem PORQUE, mas a descrição de lá ("pelo
+# motivo de") soa ao "porque" explicativo, não à pergunta "por quê" — melhor
+# confirmar com a professora do que arriscar o sinal errado (ver NOTAS_DE_LINGUA
+# em gerador.py). "Por" sozinho também é bloqueado de propósito: sem acento
+# ele bate com PÔR (colocar), verbo completamente diferente.
+
+quê
+qual
+onde
+como
+quantos
+quanto
+quem
+quando
+
+= por que

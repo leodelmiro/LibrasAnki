@@ -1,0 +1,40 @@
+# Pronomes possessivos
+#
+# A apostila descreve cada par masculino/feminino com uma única configuração
+# de mão — não marcam gênero, como ELE/ELA. O INES só cataloga a forma
+# masculina de alguns pares; MEU/MINHA já vinha resolvido no dicionário,
+# SEU/SUA, DELE/DELA e NOSSO/NOSSA foram acrescentados ao índice (SINONIMOS
+# em indice.py) seguindo a mesma apostila.
+#
+#     Meu/minha    mão em P ou mão aberta no peito
+#     Seu/sua      mão em P para frente
+#     Dele/dela    mão em P apontando para a 3ª pessoa, para os lados
+#     Nosso/nossa  mão em G (indicador) ou mão aberta de ombro a ombro
+#
+# TEU/TUA e VOSSO/VOSSA não têm verbete no INES nem uma forma masculina para
+# servir de âncora — ficam com falta-video mesmo, com a descrição de mão da
+# apostila para gravar na aula:
+#
+#     Teu/tua      mão em P apontando para a pessoa com quem se fala
+#     Vosso/Vossa  plural, mão em P
+#
+# PERTENCIMENTO e PERTENCE são glosas alternativas da apostila para o mesmo
+# sinal de PRÓPRIO (mão em P batendo na palma da outra mão) — não são
+# verbetes à parte no INES.
+
+meu
+minha
+seu
+sua
+dele
+dela
+nosso
+nossa
+próprio
+pertencimento
+pertence
+
+teu
+tua
+vosso
+vossa

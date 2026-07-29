@@ -1,0 +1,33 @@
+# Vocabulário avulso
+#
+# Palavras soltas pedidas à parte, sem tema gramatical único. As que já
+# estavam cobertas por outra lista ficaram de fora daqui: Ele, ela, Nós
+# (pronomes-pessoais.txt); Meu, Seu, Dele, Dela, Próprio (pronomes-possessivos.txt);
+# Bem-vindo, Bom dia, Boa tarde, Prazer, Obrigado, Nome (saudacoes.txt).
+#
+# CELULAR e PESSOA têm dois verbetes cada no INES (sentidos diferentes, não
+# ambiguidade de busca):
+#
+#     celular   telefone "de botão" antigo / smartphone com texto
+#     pessoa    ser humano / indivíduo, sujeito
+#
+# "Não tenho" vira frase (TER tem verbete, mas a negação em si não é um
+# verbete à parte no INES) — falta a glosa pra virar card de gramática.
+
+tenho
+não tenho
+
+amigo
+cinema
+cidade
+celular
+irmão
+
+cachorro
+gato
+macho
+fêmea
+
+pessoa
+masculino
+feminino

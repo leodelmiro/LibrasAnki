@@ -30,6 +30,17 @@ COMPOSTOS = {
 NOTAS_DE_LINGUA = {
     "ela": "Em LIBRAS o pronome de 3ª pessoa é apontar e não marca gênero: "
            "'ele' e 'ela' são o mesmo sinal.",
+    # TEU/TUA e VOSSO/VOSSA não têm verbete no INES (nem um masculino para
+    # servir de âncora, como SEU/DELE/NOSSO têm). Descrição da apostila, para
+    # gravar na aula.
+    "teu": "Sem verbete no INES. Configuração de mão em P, apontando para a "
+           "pessoa com quem se fala (apostila).",
+    "tua": "Sem verbete no INES. Configuração de mão em P, apontando para a "
+           "pessoa com quem se fala (apostila).",
+    "vosso": "Sem verbete no INES. Indica plural: configuração de mão em P "
+             "(apostila).",
+    "vossa": "Sem verbete no INES. Indica plural: configuração de mão em P "
+             "(apostila).",
 }
 
 

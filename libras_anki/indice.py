@@ -21,10 +21,15 @@ LEMAS = {
     "ESTA": "ESTAR",
     "ESTAO": "ESTAR",
     "ESTOU": "ESTAR",
+    "ESTUDA": "ESTUDAR",
+    "GOSTA": "GOSTAR",
     "MINHA": "MEU",
     "MORA": "MORAR",
     "SAIU": "SAIR",
+    "TEM": "TER",
     "TEMOS": "TER",
+    "TENHO": "TER",
+    "VAI": "IR",
     "VAMOS": "IR",
     "VOCES": "VOCE",
     "VOU": "IR",
@@ -36,6 +41,18 @@ SINONIMOS = {
     # Em LIBRAS o pronome de 3ª pessoa é apontar e não marca gênero: "ela" e
     # "ele" são o mesmo sinal. Não é lacuna do dicionário, é a gramática.
     "ELA": "ELE",
+    "ELAS": "ELE",
+    # Possessivos: a apostila descreve cada par masculino/feminino com uma
+    # única configuração de mão (não marcam gênero, como ELE/ELA). TEU/TUA e
+    # VOSSO/VOSSA não entram aqui porque nenhum dos dois tem verbete no INES
+    # para servir de âncora — ficam como lacuna mesmo, nas listas de estudo.
+    "SUA": "SEU",
+    "DELA": "DELE",
+    "NOSSA": "NOSSO",
+    # "Pertencimento" e "pertence" são glosas alternativas da apostila para o
+    # mesmo sinal de PRÓPRIO (mão em P batendo na palma da outra mão).
+    "PERTENCIMENTO": "PROPRIO",
+    "PERTENCE": "PROPRIO",
 }
 
 # Falsos amigos: termos que a normalização resolveria para um verbete de sentido
@@ -45,6 +62,9 @@ FALSOS_AMIGOS = {
     # "LIBRAS"[:-1] == "LIBRA", que no dicionário é a unidade de peso e o signo
     # do zodíaco, nada a ver com a língua de sinais.
     "LIBRAS": "no INES só existe LIBRA (unidade de peso / signo), não a língua",
+    # "por" (de "por que") sem acento normaliza igual a "PÔR", o verbo colocar —
+    # sinal completamente diferente do usado na pergunta "por quê".
+    "POR": "no INES 'por' sem acento cai em PÔR (colocar), verbo diferente",
 }
 
 # O currículo escreve números como dígito ("dormir às 10 horas"), a base os
