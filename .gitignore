@@ -1,0 +1,9 @@
+# Baixados e gerados — tudo reconstruível rodando o gerador de novo.
+.cache/
+out/
+
+.venv/
+__pycache__/
+*.pyc
+
+.idea/

@@ -1,0 +1,5 @@
+genanki>=0.13
+requests>=2.31
+# ffmpeg empacotado como binário: converte os MP4 do INES para WebM/VP9, que é
+# o formato que o webview do Anki desktop consegue decodificar.
+imageio-ffmpeg>=0.4
