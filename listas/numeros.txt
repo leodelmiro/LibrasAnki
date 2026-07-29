@@ -1,0 +1,30 @@
+# Números 1 a 10
+#
+# Escopo limitado a 1–10 de propósito: é a faixa em que o dicionário do INES tem
+# cobertura completa. Faltam na base 13, 18, 19, 90 e todas as centenas de 500 a
+# 900 (e "CENTO"), então números maiores não têm como ser montados.
+#
+# A aula ensina que a MESMA configuração de mão muda de sentido pelo movimento:
+#
+#     ordinais 1–9    movimento trêmulo
+#     cardinais       sem movimento
+#     quantidade 1–4  forma própria; de 5 em diante igual ao cardinal
+#
+# O INES guarda parte dessa distinção, mas só na prosa da descrição:
+#
+#     UM1  mão 12  "O primeiro de todos os números inteiros."          -> cardinal
+#     UM2  mão 82  "Algarismo representativo para QUANTIDADE..."       -> quantidade
+#
+# Onde existem os dois verbetes, o gerador monta card de contraste.
+# O trêmulo dos ordinais não existe na base — esses cards nascem com falta-video.
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10

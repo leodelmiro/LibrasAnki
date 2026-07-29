@@ -1,0 +1,28 @@
+# Frases da apostila
+#
+# Para acrescentar a glosa em LIBRAS quando a professora passar, use "|":
+#
+#     Ele está cansado | ELE CANSAD@
+#
+# Sem glosa, o card de gramática não é criado e a nota fica com falta-glosa.
+# O card "Sinalize esta frase" funciona de qualquer jeito: mostra no verso os
+# vídeos do vocabulário reconhecido e avisa o que não tem sinal no INES.
+#
+# Cobertura medida destas 14 frases: 46 de 50 palavras (92%).
+# Ausentes: "Libras", "atrasado", "Terça-feira" e "Lulu" (nome próprio, que se
+# faz por datilologia — soletrando).
+
+Vocês estão aprendendo Libras.
+Eu cheguei atrasado.
+Amanhã eu vou trabalhar.
+Você está bonito.
+Meu carro é vermelho.
+O nome do meu cachorro é Lulu.
+Minha mãe mora longe.
+Quarta-feira eu estou de folga.
+Ela saiu domingo.
+Nós vamos dormir às 10 horas.
+Terça-feira vou viajar.
+Ele está cansado.
+Prazer em conhecer você.
+Hoje nós temos aula.

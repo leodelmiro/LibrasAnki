@@ -1,0 +1,36 @@
+# Cumprimentos
+#
+# Não existe assunto "saudações" no INES: os 21 assuntos de lá são categorias
+# concretas (ALIMENTO, ANIMAL, CORPO...) e 64% dos verbetes caem em "NENHUM".
+# Por isso este agrupamento é manual.
+#
+# As linhas com "=" forçam tratamento como palavra: são saudações COMPOSTAS, que
+# não existem como verbete em dicionário nenhum. Verificado: faltam tanto no INES
+# quanto no Spread the Sign. Dois acervos independentes omitindo os mesmos itens
+# é evidência de que se sinaliza BOM + DIA em sequência, e não que os dois
+# dicionários falharam. Ficam marcadas com falta-video para você gravar na aula.
+
+oi
+olá
+tchau
+até logo
+tudo bem
+bem
+obrigado1
+por favor
+com licença
+sim
+prazer1
+bem-vindo
+nome
+conhecer
+morar
+onde
+
+= bom dia
+= boa tarde
+= boa noite
+= de nada
+= até amanhã
+= ótimo
+= tenha um bom fim de semana
