@@ -87,18 +87,20 @@ Quando a professora passar a glosa de uma frase, edite a linha e regere — o ca
 
 ## O que o baralho tem
 
-**Palavras** — até 3 cards por sinal:
+**Palavras** — 2 cards por sinal:
 
 ```
-┌────────────┐  ┌────────────┐  ┌────────────┐
-│  Recepção  │  │  Produção  │  │  Gramática │
-│ vídeo → PT │  │ PT → vídeo │  │ PT ↔ glosa │
-└────────────┘  └────────────┘  └────────────┘
+┌────────────┐  ┌────────────┐
+│  Recepção  │  │  Produção  │
+│ vídeo → PT │  │ PT → vídeo │
+└────────────┘  └────────────┘
 ```
 
-O de gramática só existe quando a nota tem exemplo e glosa. Sem vídeo, o de recepção também não é criado — não faria sentido perguntar "que palavra é esta?" sem mostrar nada.
+Sem vídeo no INES, o aviso "Sem vídeo disponível — grave na aula" aparece no lugar do vídeo — os dois cards continuam existindo, só que sem vídeo pra mostrar.
 
-**Frases** — "Sinalize esta frase" (com os vídeos do vocabulário no verso) e gramática.
+**Frases** — "Sinalize esta frase" (com os vídeos do vocabulário no verso) e gramática (frase PT ↔ glosa, só quando a glosa foi preenchida). O card de gramática de frase é o único do baralho: palavras isoladas não carregam mais exemplo/glosa/classe/mão, só o essencial para reconhecer e produzir o sinal.
+
+Nem toda palavra da frase tem sinal no INES. As que não têm ficam de fora do vocabulário do verso e entram, em vez disso, num aviso: "Sem sinal no INES: ...". Exemplo real do baralho — a frase "Vocês estão aprendendo Libras." mostra os vídeos de VOCÊ, ESTAR e APRENDER, mas "Libras" vai para o aviso porque a própria palavra "Libras" não é verbete do dicionário.
 
 **Números** — quando o INES traz dois verbetes para o mesmo número, vira card de contraste em vez de vocabulário isolado, porque a mesma mão muda de sentido pelo movimento.
 

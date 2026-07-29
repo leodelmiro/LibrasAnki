@@ -117,8 +117,6 @@ class Gerador:
 
     def _campos_auxiliares(self, verbete):
         return {
-            "mao": self.tabelas["mao"].get(str(verbete.get("mao")), {}).get("ordem", ""),
-            "classe": self.tabelas["classes"].get(str(verbete.get("classe")), {}).get("nome", ""),
             "origem": self.tabelas["origem"].get(str(verbete.get("origem")), {}).get("nome", ""),
         }
 
@@ -132,11 +130,11 @@ class Gerador:
 
         pares = self._pares(sinal.videos)
         tags = set(sinal.tags) | set(tags_extra)
-        observacao = ""
 
         if not pares:
+            # O aviso já vai dentro do campo Videos (modelo.html_videos); aqui só
+            # falta marcar a tag para dar pra filtrar no Anki.
             tags.add(TAG_FALTA_VIDEO)
-            observacao = "Sem vídeo disponível — preencher com material da aula."
             self.relatorio.falta_video.append(sinal.palavra)
         if grupos.TAG_VIDEO_SUSPEITO in tags:
             self.relatorio.video_suspeito.append(sinal.palavra)
@@ -149,9 +147,6 @@ class Gerador:
                 palavra=sinal.palavra,
                 pares_video=pares,
                 descricao=sinal.descricao,
-                exemplo=sinal.exemplo,
-                glosa=sinal.libras,
-                observacao=observacao,
                 tags=tags,
                 guid=modelo.guid_para(
                     sinal.ident, sinal.videos[0] if sinal.videos else sinal.palavra

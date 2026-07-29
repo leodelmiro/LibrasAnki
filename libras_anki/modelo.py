@@ -1,16 +1,20 @@
-"""Modelo de nota do Anki e os três templates de card.
+"""Modelo de nota do Anki e os templates de card.
 
-Uma nota por sinal gera até três cards. Não são três notas separadas: assim,
-acrescentar uma palavra é uma entrada só, corrigir a descrição corrige os três
+Uma nota por sinal gera até dois cards. Não são notas separadas: assim,
+acrescentar uma palavra é uma entrada só, corrigir a descrição corrige os dois
 cards, e o *bury siblings* do Anki impede que os irmãos caiam no mesmo dia — o
 que seria trapaça, já que responder um entrega o outro.
 
     Recepção   vídeo → palavra      reconhecer alguém sinalizando
     Produção   palavra → vídeo      saber fazer o sinal
-    Gramática  frase PT ↔ glosa     a estrutura da língua
 
-O card de gramática só existe quando a nota tem exemplo E glosa: o Anki não gera
-card quando o template da frente resulta em vazio.
+Sem vídeo, o campo `Videos` já vem com o aviso escrito no lugar dele (ver
+`html_videos`), então os dois cards continuam existindo — só mostram o aviso
+em vez do vídeo.
+
+A gramática (frase PT ↔ glosa) existe só para frases, no `MODELO_FRASE` mais
+abaixo — o card de palavra isolada não carrega mais exemplo, glosa, classe
+gramatical nem configuração de mão.
 """
 
 import hashlib
@@ -27,10 +31,6 @@ CAMPOS = [
     "Palavra",
     "Videos",
     "Descricao",
-    "Exemplo",
-    "Glosa",
-    "Mao",
-    "Classe",
     "Origem",
     "Observacao",
 ]
@@ -50,7 +50,6 @@ CSS = """
   color: #8a8a8a; margin-bottom: 14px;
 }
 .palavra { font-size: 32px; font-weight: 600; letter-spacing: .01em; }
-.classe { font-size: 14px; color: #8a8a8a; margin-top: 4px; }
 .descricao { font-size: 17px; color: #444; margin-top: 14px; }
 .exemplo { font-size: 17px; color: #555; font-style: italic; margin-top: 12px; }
 .glosa {
@@ -83,9 +82,7 @@ TEMPLATES = [
         "afmt": (
             '{{FrontSide}}\n<hr>\n'
             '<div class="palavra">{{Palavra}}</div>\n'
-            '<div class="classe">{{Classe}}</div>\n'
             '<div class="descricao">{{Descricao}}</div>\n'
-            '{{#Exemplo}}<div class="exemplo">{{Exemplo}}</div>{{/Exemplo}}\n'
             '{{#Observacao}}<div class="aviso">{{Observacao}}</div>{{/Observacao}}'
         ),
     },
@@ -93,32 +90,12 @@ TEMPLATES = [
         "name": "Producao",
         "qfmt": (
             '<div class="rotulo">Faça o sinal</div>\n'
-            '<div class="palavra">{{Palavra}}</div>\n'
-            '<div class="classe">{{Classe}}</div>'
+            '<div class="palavra">{{Palavra}}</div>'
         ),
         "afmt": (
             '{{FrontSide}}\n<hr>\n{{Videos}}\n'
-            '<div class="meta">configuração de mão: {{Mao}} &middot; origem: {{Origem}}</div>\n'
-            '{{#Glosa}}<div class="glosa">{{Glosa}}</div>{{/Glosa}}\n'
+            '{{#Origem}}<div class="meta">origem: {{Origem}}</div>{{/Origem}}\n'
             '{{#Observacao}}<div class="aviso">{{Observacao}}</div>{{/Observacao}}'
-        ),
-    },
-    {
-        "name": "Gramatica",
-        # Envolver a frente inteira nas condicionais faz o Anki simplesmente não
-        # criar este card quando falta exemplo ou glosa.
-        "qfmt": (
-            "{{#Exemplo}}{{#Glosa}}\n"
-            '<div class="rotulo">Como fica em LIBRAS?</div>\n'
-            '<div class="exemplo">{{Exemplo}}</div>\n'
-            "{{/Glosa}}{{/Exemplo}}"
-        ),
-        "afmt": (
-            '{{FrontSide}}\n<hr>\n'
-            '<div class="meta">português</div>\n'
-            '<div class="exemplo">{{Exemplo}}</div>\n'
-            '<div class="meta">LIBRAS</div>\n'
-            '<div class="glosa">{{Glosa}}</div>'
         ),
     },
 ]
@@ -258,10 +235,17 @@ def html_video(mp4, webm=None):
     return "<video autoplay loop muted playsinline>" + "".join(fontes) + "</video>"
 
 
+SEM_VIDEO = '<div class="aviso">Sem vídeo disponível — grave na aula.</div>'
+
+
 def html_videos(pares):
-    """Monta o bloco de vídeos. Variantes ficam identificadas no mesmo card."""
+    """Monta o bloco de vídeos. Sem vídeo, escreve o aviso no lugar dele.
+
+    Assim o aviso aparece exatamente onde o vídeo apareceria, em vez de deixar
+    o card com um espaço vazio.
+    """
     if not pares:
-        return ""
+        return SEM_VIDEO
     if len(pares) == 1:
         mp4, webm = pares[0]
         return html_video(mp4, webm)
@@ -312,8 +296,8 @@ def criar_baralho(nome=NOME_BARALHO):
     return genanki.Deck(ID_BARALHO, nome)
 
 
-def criar_nota(palavra, pares_video, descricao="", exemplo="", glosa="",
-               mao="", classe="", origem="", observacao="", tags=(), guid=None):
+def criar_nota(palavra, pares_video, descricao="", origem="", observacao="",
+               tags=(), guid=None):
     """Cria a nota do Anki a partir dos dados já resolvidos."""
     return genanki.Note(
         model=MODELO,
@@ -322,10 +306,6 @@ def criar_nota(palavra, pares_video, descricao="", exemplo="", glosa="",
             palavra,
             html_videos(pares_video),
             descricao,
-            exemplo,
-            glosa,
-            str(mao),
-            classe,
             origem,
             observacao,
         ],

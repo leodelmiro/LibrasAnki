@@ -59,14 +59,6 @@ class Sinal:
     def descricao(self):
         return self.principal.get("descricao", "")
 
-    @property
-    def exemplo(self):
-        return self.principal.get("exemplo", "")
-
-    @property
-    def libras(self):
-        return self.principal.get("libras", "")
-
     def __repr__(self):
         return f"<Sinal {self.palavra} {self.tipo} {len(self.verbetes)} verbete(s)>"
 
