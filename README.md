@@ -6,9 +6,10 @@ Gera baralhos Anki a partir do [Dicionário da Língua Brasileira de Sinais do I
 
 ## Preparar o ambiente
 
-Só uma vez.
+Só uma vez. Requer Python 3.
 
 ```
+py -m venv .venv
 .venv/Scripts/python.exe -m pip install -r requirements.txt
 ```
 
