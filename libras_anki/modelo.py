@@ -277,14 +277,24 @@ def criar_baralho(nome=NOME_BARALHO):
 
 
 def criar_nota(palavra, pares_video, descricao="", origem="", observacao="",
-               tags=(), guid=None):
-    """Cria a nota do Anki a partir dos dados já resolvidos."""
+               tags=(), guid=None, componentes=()):
+    """Cria a nota do Anki a partir dos dados já resolvidos.
+
+    `componentes` atende os compostos, que não têm sinal próprio e se fazem em
+    sequência (BOA + TARDE). Cada item é `(rótulo, mp4, webm)` e vai rotulado no
+    card, na ordem de sinalização — não são variantes de um mesmo sinal, então
+    não podem passar por `pares_video`, que rotula como "variante 1, 2…".
+    """
+    if componentes:
+        videos = html_vocabulario(componentes)
+    else:
+        videos = html_videos(pares_video)
     return genanki.Note(
         model=MODELO,
         guid=guid,
         fields=[
             palavra,
-            html_videos(pares_video),
+            videos,
             descricao,
             origem,
             observacao,

@@ -83,7 +83,12 @@ NUMERAIS = {
     "10": "DEZ",
 }
 
-_SUFIXO_NUMERICO = re.compile(r"\d+$")
+# O sufixo de desambiguação é quase sempre colado ("ABANDONAR2"), mas 9 verbetes
+# usam espaço ("DIA 1", "BOLO 2", "MAIS 1", "REDE 1"). Sem tolerar o espaço,
+# `raiz` devolvia "DIA " e duas coisas quebravam: "dia" e "bolo" ficavam
+# inalcançáveis na busca, e MAIS/REDE — que misturam os dois padrões — eram
+# partidos em dois grupos quando são um só.
+_SUFIXO_NUMERICO = re.compile(r"\s*\d+$")
 
 
 def normalizar(texto):
@@ -93,7 +98,7 @@ def normalizar(texto):
 
 
 def raiz(palavra):
-    """Remove o sufixo numérico: ABANDONAR2 -> ABANDONAR."""
+    """Remove o sufixo numérico: ABANDONAR2 -> ABANDONAR, DIA 1 -> DIA."""
     return _SUFIXO_NUMERICO.sub("", palavra)
 
 

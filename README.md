@@ -118,11 +118,28 @@ Nem toda palavra da frase tem sinal no INES. As que não têm ficam de fora do v
 
 **Números** — quando o INES traz dois verbetes para o mesmo número, vira card de contraste em vez de vocabulário isolado, porque a mesma mão muda de sentido pelo movimento.
 
+**Compostos** — `BOA TARDE` não existe como verbete porque se sinaliza BOA + TARDE em sequência. Em vez de um card vazio esperando gravação, o verso mostra os vídeos dos componentes na ordem:
+
+```
+┌─────────────────────────────────┐
+│ BOA    [vídeo]                  │
+│ TARDE  [vídeo]                  │
+│                                 │
+│ ⚠ Composto: BOA + TARDE em      │
+│   sequência. Confirme na aula:  │
+│   BOA.                          │
+└─────────────────────────────────┘
+```
+
+Os componentes são declarados à mão em `gerador.py`, não deduzidos de dividir a frase — "de" não tem sinal, e `BOM` tem três sentidos diferentes no INES (situação agradável, característica positiva, roupa que veste bem). Onde a escolha saiu por eliminação em vez de conhecimento confirmado, a nota leva `confirmar-sinal` e o card diz o que checar.
+
 ### Tags para filtrar no Anki
 
 | Tag | O que é |
 |---|---|
 | `falta-video` | sem vídeo no INES — grave na aula |
+| `composto` | sem verbete próprio; o card mostra os componentes em sequência |
+| `confirmar-sinal` | a escolha do componente saiu por eliminação — confirme na aula |
 | `video-suspeito` | o vídeo é usado por outro verbete; confira antes de decorar |
 | `grupo-misto` | classificação ambígua, separado por precaução |
 | `numero` `ordinal` `frase` | categoria |

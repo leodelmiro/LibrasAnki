@@ -13,7 +13,9 @@
 # avatar, não prova de item lexical distinto — mas basta para não afirmar que
 # "não existem em dicionário nenhum". São as primeiras a perguntar na aula.
 #
-# Ficam marcadas com falta-video para você gravar na aula.
+# Os compostos não ficam sem vídeo: o card mostra os componentes em sequência
+# (BOA + TARDE), montados a partir da tabela COMPOSTOS em gerador.py. Só "ótimo"
+# fica com falta-video, porque não é composto — é lacuna mesmo.
 
 oi
 olá
