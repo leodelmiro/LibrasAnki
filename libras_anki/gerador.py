@@ -1,10 +1,10 @@
 """Montagem do baralho a partir das listas de estudo.
 
 Regra que atravessa tudo: nada é descartado em silêncio. Palavra sem verbete,
-frase sem glosa, vídeo que não baixou — tudo vira nota marcada por tag, para
-você filtrar no Anki (`tag:falta-video`, `tag:falta-glosa`) e completar com
-material da aula. Pular em silêncio esconderia a lacuna; abortar impediria de
-estudar o resto.
+vídeo que não baixou, palavra da frase sem sinal — tudo vira nota marcada por
+tag, para você filtrar no Anki (`tag:falta-video`) e completar com material da
+aula. Pular em silêncio esconderia a lacuna; abortar impediria de estudar o
+resto.
 """
 
 import genanki
@@ -12,7 +12,6 @@ import genanki
 from . import grupos, indice, ines, listas, midia, modelo, numeros
 
 TAG_FALTA_VIDEO = "falta-video"
-TAG_FALTA_GLOSA = "falta-glosa"
 
 # Itens que não existem em dicionário nenhum por serem compostos. Verificado no
 # INES e no Spread the Sign: os dois omitem os mesmos. Não é falha de busca.
@@ -52,7 +51,6 @@ class Relatorio:
         self.por_tipo = {}
         self.nao_resolvidos = []
         self.falta_video = []
-        self.falta_glosa = []
         self.video_suspeito = []
         self.grupo_misto = []
         self.midia = {}
@@ -84,8 +82,6 @@ class Relatorio:
 
         bloco("SEM SINAL NO INES", self.nao_resolvidos,
               "geradas assim mesmo, com tag falta-video")
-        bloco("SEM GLOSA", self.falta_glosa,
-              "o card de gramática não é criado até a glosa ser preenchida")
         bloco("VÍDEO SUSPEITO", self.video_suspeito,
               "o mesmo arquivo é usado por outro verbete — confira antes de decorar")
         bloco("GRUPO MISTO", self.grupo_misto,
@@ -214,10 +210,6 @@ class Gerador:
                 ausentes.append(palavra)
 
         tags = {"frase"}
-        if not item.glosa:
-            tags.add(TAG_FALTA_GLOSA)
-            self.relatorio.falta_glosa.append(item.texto)
-
         observacao = ""
         if ausentes:
             nota = [NOTAS_DE_LINGUA[p.lower()] for p in ausentes if p.lower() in NOTAS_DE_LINGUA]
@@ -226,7 +218,6 @@ class Gerador:
         self.baralho.add_note(
             modelo.criar_nota_frase(
                 frase=item.texto,
-                glosa=item.glosa,
                 vocabulario=vocabulario,
                 ausentes=ausentes,
                 observacao=observacao,

@@ -1,9 +1,13 @@
 """Modelo de nota do Anki e os templates de card.
 
-Uma nota por sinal gera até dois cards. Não são notas separadas: assim,
-acrescentar uma palavra é uma entrada só, corrigir a descrição corrige os dois
-cards, e o *bury siblings* do Anki impede que os irmãos caiam no mesmo dia — o
-que seria trapaça, já que responder um entrega o outro.
+O baralho pratica sinais, não notação escrita. Nenhum modelo tem card de
+gramática: glosa é convenção de transcrição para estudo linguístico, não o que
+se pratica sinalizando.
+
+Palavra gera dois cards a partir de uma nota só. Não são notas separadas:
+assim, acrescentar uma palavra é uma entrada só, corrigir a descrição corrige
+os dois cards, e o *bury siblings* do Anki impede que os irmãos caiam no mesmo
+dia — o que seria trapaça, já que responder um entrega o outro.
 
     Recepção   vídeo → palavra      reconhecer alguém sinalizando
     Produção   palavra → vídeo      saber fazer o sinal
@@ -12,9 +16,9 @@ Sem vídeo, o campo `Videos` já vem com o aviso escrito no lugar dele (ver
 `html_videos`), então os dois cards continuam existindo — só mostram o aviso
 em vez do vídeo.
 
-A gramática (frase PT ↔ glosa) existe só para frases, no `MODELO_FRASE` mais
-abaixo — o card de palavra isolada não carrega mais exemplo, glosa, classe
-gramatical nem configuração de mão.
+Frase gera um card só (`MODELO_FRASE`): português na frente, vídeos do
+vocabulário no verso para conferir. Não há card de recepção porque não existe
+um sinal único a reconhecer.
 """
 
 import hashlib
@@ -52,10 +56,6 @@ CSS = """
 .palavra { font-size: 32px; font-weight: 600; letter-spacing: .01em; }
 .descricao { font-size: 17px; color: #444; margin-top: 14px; }
 .exemplo { font-size: 17px; color: #555; font-style: italic; margin-top: 12px; }
-.glosa {
-  font-size: 19px; color: #16507c; font-weight: 600; letter-spacing: .03em;
-  margin-top: 12px;
-}
 .meta { font-size: 13px; color: #999; margin-top: 12px; }
 .variante { font-size: 12px; text-transform: uppercase; letter-spacing: .08em;
   color: #8a8a8a; margin: 10px 0 4px; }
@@ -70,7 +70,6 @@ hr { border: none; border-top: 1px solid #e0e0e0; margin: 18px 0; }
 .nightMode.card { color: #e8e8e8; background: #2c2c2c; }
 .nightMode .descricao { color: #c8c8c8; }
 .nightMode .exemplo { color: #bdbdbd; }
-.nightMode .glosa { color: #7fb8e8; }
 .nightMode .aviso { color: #f0c674; background: #3a3320; border-left-color: #b8860b; }
 .nightMode hr { border-top-color: #4a4a4a; }
 """
@@ -111,11 +110,11 @@ MODELO = genanki.Model(
 
 ID_MODELO_FRASE = 1748203393
 
-CAMPOS_FRASE = ["Frase", "Glosa", "Vocabulario", "Ausentes", "Observacao"]
+CAMPOS_FRASE = ["Frase", "Vocabulario", "Ausentes", "Observacao"]
 
 # Frases não têm vídeo próprio: o INES é um dicionário de palavras. Então não
-# existe card de recepção aqui — não há um sinal único para reconhecer. Sobram
-# "sinalize a frase" (com os vídeos do vocabulário no verso) e a gramática.
+# existe card de recepção aqui — não há um sinal único para reconhecer. Sobra
+# "sinalize a frase", com os vídeos do vocabulário no verso para conferir.
 TEMPLATES_FRASE = [
     {
         "name": "Sinalizar",
@@ -123,26 +122,9 @@ TEMPLATES_FRASE = [
                 '<div class="exemplo">{{Frase}}</div>',
         "afmt": (
             '{{FrontSide}}\n<hr>\n'
-            '{{#Glosa}}<div class="glosa">{{Glosa}}</div>{{/Glosa}}\n'
             '{{#Vocabulario}}<div class="meta">vocabulário</div>{{Vocabulario}}{{/Vocabulario}}\n'
             '{{#Ausentes}}<div class="aviso">Sem sinal no INES: {{Ausentes}}</div>{{/Ausentes}}\n'
             '{{#Observacao}}<div class="aviso">{{Observacao}}</div>{{/Observacao}}'
-        ),
-    },
-    {
-        "name": "Gramatica",
-        "qfmt": (
-            "{{#Glosa}}\n"
-            '<div class="rotulo">Como fica em LIBRAS?</div>\n'
-            '<div class="exemplo">{{Frase}}</div>\n'
-            "{{/Glosa}}"
-        ),
-        "afmt": (
-            '{{FrontSide}}\n<hr>\n'
-            '<div class="meta">português</div>\n'
-            '<div class="exemplo">{{Frase}}</div>\n'
-            '<div class="meta">LIBRAS</div>\n'
-            '<div class="glosa">{{Glosa}}</div>'
         ),
     },
 ]
@@ -268,22 +250,20 @@ def html_vocabulario(itens):
 def guid_frase(texto):
     """GUID de uma nota de frase, derivado do próprio texto em português.
 
-    Assim, corrigir a glosa ou o vocabulário reconhecido atualiza a nota
-    existente em vez de criar outra.
+    Assim, corrigir o vocabulário reconhecido atualiza a nota existente em vez
+    de criar outra.
     """
     digest = hashlib.sha1(f"frase:{texto.strip().lower()}".encode("utf-8")).hexdigest()
     return genanki.guid_for(digest)
 
 
-def criar_nota_frase(frase, glosa="", vocabulario=(), ausentes=(),
-                     observacao="", tags=()):
+def criar_nota_frase(frase, vocabulario=(), ausentes=(), observacao="", tags=()):
     """Cria a nota de uma frase da apostila."""
     return genanki.Note(
         model=MODELO_FRASE,
         guid=guid_frase(frase),
         fields=[
             frase,
-            glosa,
             html_vocabulario(vocabulario),
             ", ".join(ausentes),
             observacao,

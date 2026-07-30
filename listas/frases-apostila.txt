@@ -1,12 +1,7 @@
 # Frases da apostila
 #
-# Para acrescentar a glosa em LIBRAS quando a professora passar, use "|":
-#
-#     Ele está cansado | ELE CANSAD@
-#
-# Sem glosa, o card de gramática não é criado e a nota fica com falta-glosa.
-# O card "Sinalize esta frase" funciona de qualquer jeito: mostra no verso os
-# vídeos do vocabulário reconhecido e avisa o que não tem sinal no INES.
+# Cada frase vira um card "Sinalize esta frase": português na frente, e no verso
+# os vídeos do vocabulário reconhecido, com aviso do que não tem sinal no INES.
 #
 # Cobertura medida destas 14 frases: 46 de 50 palavras (92%).
 # Ausentes: "Libras", "atrasado", "Terça-feira" e "Lulu" (nome próprio, que se

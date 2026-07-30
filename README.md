@@ -45,6 +45,12 @@ Ao final vem um relatório do que entrou e do que precisa de atenção. Nada é 
 
 **Pode regerar e reimportar quantas vezes quiser.** Cada nota tem GUID estável, então o Anki atualiza as existentes preservando seu histórico de revisão e só acrescenta as novas.
 
+> **Se um template deixar de existir, os cards antigos ficam.** O Anki não apaga
+> cards ao remover um template na reimportação — eles continuam aparecendo nas
+> revisões, órfãos. Para limpar: no navegador (`Ctrl+Shift+B`), busque pelo
+> template, por exemplo `card:Gramatica`, selecione tudo e apague as notas ou os
+> cards. Aconteceu quando o card de gramática saiu do baralho.
+
 ---
 
 ## Acrescentar palavras depois de cada aula
@@ -73,15 +79,14 @@ Não precisa se preocupar com acento, maiúscula ou flexão: `cheguei` acha `CHE
 ```
 casa                            palavra
 tudo bem                        palavra (o INES tem verbetes com espaço)
-Meu carro é vermelho.           frase, sem glosa
-Ele está cansado | ELE CANSAD@  frase com a glosa que a professora passou
+Meu carro é vermelho.           frase
 = bom dia                       força palavra, mesmo sem verbete no INES
 # comentário                    ignorado
 ```
 
-O agrupamento **não** vem do campo `assunto` do INES: lá os 21 assuntos são categorias concretas (ALIMENTO, ANIMAL, CORPO…), 64% dos verbetes caem em "NENHUM" e não existe nada como "saudações".
+O tipo sai do prefixo `=` e da consulta ao dicionário: se a linha inteira resolve como verbete, é palavra; senão, com mais de uma palavra significativa, é frase.
 
-Quando a professora passar a glosa de uma frase, edite a linha e regere — o card de gramática aparece sozinho, sem mexer no que você já estudou.
+O agrupamento **não** vem do campo `assunto` do INES: lá os 21 assuntos são categorias concretas (ALIMENTO, ANIMAL, CORPO…), 64% dos verbetes caem em "NENHUM" e não existe nada como "saudações".
 
 ---
 
@@ -98,7 +103,16 @@ Quando a professora passar a glosa de uma frase, edite a linha e regere — o ca
 
 Sem vídeo no INES, o aviso "Sem vídeo disponível — grave na aula" aparece no lugar do vídeo — os dois cards continuam existindo, só que sem vídeo pra mostrar.
 
-**Frases** — "Sinalize esta frase" (com os vídeos do vocabulário no verso) e gramática (frase PT ↔ glosa, só quando a glosa foi preenchida). O card de gramática de frase é o único do baralho: palavras isoladas não carregam mais exemplo/glosa/classe/mão, só o essencial para reconhecer e produzir o sinal.
+**Frases** — 1 card, "Sinalize esta frase": o português na frente, e no verso os vídeos do vocabulário para conferir sinal por sinal.
+
+```
+┌──────────────┐
+│  Sinalizar   │
+│ PT → vídeos  │
+└──────────────┘
+```
+
+O baralho pratica **sinais, não notação escrita** — não existe card de glosa em nenhum modelo. Palavras carregam só o essencial para reconhecer e produzir o sinal.
 
 Nem toda palavra da frase tem sinal no INES. As que não têm ficam de fora do vocabulário do verso e entram, em vez disso, num aviso: "Sem sinal no INES: ...". Exemplo real do baralho — a frase "Vocês estão aprendendo Libras." mostra os vídeos de VOCÊ, ESTAR e APRENDER, mas "Libras" vai para o aviso porque a própria palavra "Libras" não é verbete do dicionário.
 
@@ -109,7 +123,6 @@ Nem toda palavra da frase tem sinal no INES. As que não têm ficam de fora do v
 | Tag | O que é |
 |---|---|
 | `falta-video` | sem vídeo no INES — grave na aula |
-| `falta-glosa` | frase esperando a glosa em LIBRAS |
 | `video-suspeito` | o vídeo é usado por outro verbete; confira antes de decorar |
 | `grupo-misto` | classificação ambígua, separado por precaução |
 | `numero` `ordinal` `frase` | categoria |

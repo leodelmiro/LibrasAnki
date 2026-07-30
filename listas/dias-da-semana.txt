@@ -1,8 +1,12 @@
 # Dias da semana
 #
 # O INES tem segunda, quarta, quinta, sexta, sábado e domingo — e falta
-# exatamente TERÇA-FEIRA. Buraco real da base, não erro de busca.
-# "FIM DE SEMANA" também não existe como verbete.
+# exatamente TERÇA-FEIRA. Buraco da base, não erro de busca.
+# "FIM DE SEMANA" também não existe como verbete no INES.
+#
+# Os dois existem no dicionário do VLibras, como TERÇA_FEIRA e FIM_DE_SEMANA.
+# Ou seja: a lacuna é do INES, não da língua — vale perguntar o sinal na aula
+# em vez de supor que não existe.
 
 segunda-feira
 quarta-feira

@@ -18,6 +18,9 @@
 #     Teu/tua      mão em P apontando para a pessoa com quem se fala
 #     Vosso/Vossa  plural, mão em P
 #
+# Os quatro existem no dicionário do VLibras (TEU, TUA, VOSSO, VOSSA), então a
+# lacuna é do INES e não da língua. Confirme o sinal com a professora.
+#
 # PERTENCIMENTO e PERTENCE são glosas alternativas da apostila para o mesmo
 # sinal de PRÓPRIO (mão em P batendo na palma da outra mão) — não são
 # verbetes à parte no INES.

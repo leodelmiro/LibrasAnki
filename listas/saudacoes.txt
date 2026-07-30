@@ -4,11 +4,16 @@
 # concretas (ALIMENTO, ANIMAL, CORPO...) e 64% dos verbetes caem em "NENHUM".
 # Por isso este agrupamento é manual.
 #
-# As linhas com "=" forçam tratamento como palavra: são saudações COMPOSTAS, que
-# não existem como verbete em dicionário nenhum. Verificado: faltam tanto no INES
-# quanto no Spread the Sign. Dois acervos independentes omitindo os mesmos itens
-# é evidência de que se sinaliza BOM + DIA em sequência, e não que os dois
-# dicionários falharam. Ficam marcadas com falta-video para você gravar na aula.
+# As linhas com "=" forçam tratamento como palavra: faltam tanto no INES quanto
+# no Spread the Sign, os dois acervos consultados quando estas listas foram
+# montadas, o que sugere que se sinaliza BOM + DIA em sequência.
+#
+# Ressalva: o dicionário do VLibras (23.432 sinais) registra BOM_DIA, BOA_NOITE
+# e DE_NADA como sinal único. Isso pode ser conveniência de renderização do
+# avatar, não prova de item lexical distinto — mas basta para não afirmar que
+# "não existem em dicionário nenhum". São as primeiras a perguntar na aula.
+#
+# Ficam marcadas com falta-video para você gravar na aula.
 
 oi
 olá
