@@ -1,9 +1,4 @@
-## RENAMED Requirements
-
-- FROM: `### Requirement: Modelo de nota único com três templates`
-- TO: `### Requirement: Modelo de nota por tipo de item`
-
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Modelo de nota por tipo de item
 
@@ -36,6 +31,8 @@ A nota de palavra MUST conter apenas os campos `Palavra`, `Videos`, `Descricao`,
 - **WHEN** uma nota de frase é criada
 - **THEN** exatamente um card é gerado
 
+## MODIFIED Requirements
+
 ### Requirement: Reprodução de vídeo em desktop e AnkiMobile
 
 O sistema MUST embutir os vídeos usando um elemento `<video>` com os atributos `autoplay`, `loop`, `muted` e `playsinline`, contendo dois elementos `<source>`: WebM primeiro, MP4 em seguida. O webview do Anki desktop não decodifica H.264 e o WebKit do iOS não decodifica WebM em versões mais antigas, então cada plataforma seleciona o formato que sabe reproduzir.
@@ -50,7 +47,12 @@ Quando não houver vídeo disponível, o sistema MUST escrever um aviso no lugar
 #### Scenario: Revisão no AnkiMobile
 
 - **WHEN** um card com vídeo é revisado no AnkiMobile
-- **THEN** o vídeo MP4 é reproduzido dentro do card
+- **THEN** o vídeo é reproduzido dentro do card, sem abrir em tela cheia
+
+#### Scenario: Sinal curto
+
+- **WHEN** um card com vídeo é exibido
+- **THEN** o vídeo repete em laço, permitindo observar um sinal de cerca de um segundo mais de uma vez
 
 #### Scenario: Sinal sem vídeo disponível
 
@@ -75,3 +77,11 @@ O sistema MUST emitir, ao final da geração, um resumo das notas criadas e de t
 
 - **WHEN** o relatório é emitido
 - **THEN** nenhum bloco "SEM GLOSA" é impresso, porque a glosa deixou de fazer parte do baralho
+
+## REMOVED Requirements
+
+### Requirement: Modelo de nota único com três templates
+
+**Reason**: O card de gramática dependia de exemplo e glosa, que saíram do baralho — ele pratica sinais, não notação escrita. O requisito também descrevia a nota de palavra carregando configuração de mão e classe gramatical, campos que foram removidos por não serem estudados. Substituído por "Modelo de nota por tipo de item", que descreve dois templates para palavra e um para frase.
+
+**Migration**: Os cards de gramática já importados no Anki ficam órfãos — remover um template não apaga os cards existentes. Limpe buscando `card:Gramatica` no navegador do Anki. As notas de palavra são atualizadas na reimportação sem perder histórico, porque o GUID não mudou; os campos removidos simplesmente deixam de aparecer.

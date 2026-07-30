@@ -1,3 +1,24 @@
+## ADDED Requirements
+
+### Requirement: Cards de frase sem notação escrita
+
+O sistema MUST gerar um card por frase, exibindo o vocabulário reconhecido no verso. O sistema MUST NOT armazenar nem exibir glosa em LIBRAS, e MUST NOT marcar frases com tag de glosa pendente.
+
+#### Scenario: Frase da lista
+
+- **WHEN** uma frase da lista é processada
+- **THEN** a nota é criada com um único card, cujo verso lista os vídeos das palavras reconhecidas
+
+#### Scenario: Palavra da frase ausente do dicionário
+
+- **WHEN** uma frase contém uma palavra que não existe no INES
+- **THEN** o verso do card indica explicitamente qual palavra não tem sinal disponível
+
+#### Scenario: Nenhuma tag de glosa
+
+- **WHEN** qualquer nota de frase é criada
+- **THEN** ela não recebe a tag `falta-glosa`, que deixou de existir
+
 ## MODIFIED Requirements
 
 ### Requirement: Listas de estudo em arquivos de texto
@@ -30,25 +51,6 @@ A interpretação de cada linha MUST depender apenas do prefixo `=` (força trat
 
 - **WHEN** uma linha contém o caractere `|`
 - **THEN** ele é tratado como texto comum, sem significado especial, e a linha é interpretada pelas mesmas regras das demais
-
-### Requirement: Cards de frase sem notação escrita
-
-O sistema MUST gerar um card por frase, exibindo o vocabulário reconhecido no verso. O sistema MUST NOT armazenar nem exibir glosa em LIBRAS, e MUST NOT marcar frases com tag de glosa pendente.
-
-#### Scenario: Frase da lista
-
-- **WHEN** uma frase da lista é processada
-- **THEN** a nota é criada com um único card, cujo verso lista os vídeos das palavras reconhecidas
-
-#### Scenario: Palavra da frase ausente do dicionário
-
-- **WHEN** uma frase contém uma palavra que não existe no INES
-- **THEN** o verso do card indica explicitamente qual palavra não tem sinal disponível
-
-#### Scenario: Nenhuma tag de glosa
-
-- **WHEN** qualquer nota de frase é criada
-- **THEN** ela não recebe a tag `falta-glosa`, que deixou de existir
 
 ### Requirement: Pendências viram tags, nunca omissão
 
