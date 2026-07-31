@@ -69,6 +69,16 @@ COMPOSTOS = {
         ["ATÉ", "AMANHÃ"],
         [],
     ),
+    # Sequência informada em aula, não deduzida. Sem ela seria impossível
+    # acertar: o "prazer" do cumprimento é GOSTAR, e nenhum dos três verbetes
+    # de PRAZER serve — PRAZER1 e PRAZER2 são "alegria, satisfação" e PRAZER3
+    # é "satisfação sexual". Resolver pela palavra levaria ao sinal errado.
+    "prazer em conhecer você": Composto(
+        "Composto: GOSTAR + CONHECER + VOCÊ. Não se usa o sinal de PRAZER "
+        "aqui — o cumprimento se faz com GOSTAR.",
+        ["GOSTAR", "CONHECER", "VOCÊ"],
+        [],
+    ),
     # "tenha" e "um" não entram: o primeiro não tem verbete, o segundo é
     # numeral e não cabe aqui. A ordem exata desta é a menos certa das seis.
     "tenha um bom fim de semana": Composto(

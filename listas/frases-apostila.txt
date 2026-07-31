@@ -3,9 +3,16 @@
 # Cada frase vira um card "Sinalize esta frase": português na frente, e no verso
 # os vídeos do vocabulário reconhecido, com aviso do que não tem sinal no INES.
 #
-# Cobertura medida destas 14 frases: 46 de 50 palavras (92%).
-# Ausentes: "Libras", "atrasado", "Terça-feira" e "Lulu" (nome próprio, que se
-# faz por datilologia — soletrando).
+# Cobertura medida destas 13 frases: 44 de 47 palavras (94%).
+# Ausentes: "Libras" (falso amigo bloqueado — o INES só tem LIBRA, a unidade de
+# peso), "Terça-feira" (buraco da base) e "Lulu" (nome próprio, que se faz por
+# datilologia — soletrando).
+#
+# A 14ª entra com "=" logo abaixo: "prazer em conhecer você" não se monta
+# resolvendo palavra por palavra. O cumprimento é GOSTAR + CONHECER + VOCÊ, e
+# nenhum dos três verbetes de PRAZER serve — PRAZER1 e PRAZER2 são "alegria,
+# satisfação" e PRAZER3 é "satisfação sexual". A sequência veio da aula e está
+# declarada em COMPOSTOS (gerador.py).
 
 Vocês estão aprendendo Libras.
 Eu cheguei atrasado.
@@ -19,5 +26,6 @@ Ela saiu domingo.
 Nós vamos dormir às 10 horas.
 Terça-feira vou viajar.
 Ele está cansado.
-Prazer em conhecer você.
 Hoje nós temos aula.
+
+= prazer em conhecer você

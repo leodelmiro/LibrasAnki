@@ -16,6 +16,12 @@
 # Os compostos não ficam sem vídeo: o card mostra os componentes em sequência
 # (BOA + TARDE), montados a partir da tabela COMPOSTOS em gerador.py. Só "ótimo"
 # fica com falta-video, porque não é composto — é lacuna mesmo.
+#
+# PRAZER1 está aqui como vocabulário ("alegria; satisfação"), NÃO como o
+# cumprimento. "Prazer em conhecer você" se sinaliza GOSTAR + CONHECER + VOCÊ,
+# sem passar por PRAZER — está em frases-apostila.txt. Os outros dois verbetes
+# ficam de fora de propósito: PRAZER2 é sinônimo de PRAZER1 e PRAZER3 é
+# "satisfação sexual".
 
 oi
 olá
