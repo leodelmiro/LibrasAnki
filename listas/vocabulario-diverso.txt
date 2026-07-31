@@ -11,8 +11,8 @@
 #     celular   telefone "de botão" antigo / smartphone com texto
 #     pessoa    ser humano / indivíduo, sujeito
 #
-# "Não tenho" vira frase (TER tem verbete, mas a negação em si não é um
-# verbete à parte no INES) — falta a glosa pra virar card de gramática.
+# "Não tenho" vira frase: TER tem verbete, mas a negação em si não é um
+# verbete à parte no INES.
 
 tenho
 não tenho
@@ -31,3 +31,42 @@ fêmea
 pessoa
 masculino
 feminino
+
+# --- estados e qualidades ---
+# ATRASADO entra por ATRASAR, que é a forma que o INES cataloga.
+
+bonito
+feio
+cansado
+atrasado
+adiantado
+longe
+nunca
+
+# --- coisas ---
+# TELEFONE não existe no INES em forma nenhuma — só ORELHÃO (TELEFONE PÚBLICO)
+# e TELEFONISTA. Lacuna real, apesar de CELULAR existir. Pergunte na aula.
+# ALUGUEL tem dois verbetes, com sentidos distintos.
+
+carro
+bicicleta
+telefone
+aluguel
+
+# --- comida ---
+# Atenção: "carne" resolve para CARNE (o alimento) e também para CARNÊ (bloco
+# de pagamento), porque a normalização tira o acento e as duas viram a mesma
+# chave. São dois cards com descrições bem diferentes — não confunda.
+
+lanche
+carne
+carne moída
+milho
+
+# --- lugares e eventos ---
+
+curitiba
+parque
+congresso
+folga
+feriado

@@ -1,0 +1,27 @@
+# Família
+#
+# Três casos em que um sinal cobre o que o português separa — não é lacuna do
+# INES, é como a língua funciona:
+#
+#     vô / vó    um verbete só, VOVÓ-VOVÔ ("o avô, pai do pai ou da mãe;
+#                a avó, mãe do pai ou da mãe")
+#     irmão      descrito como "filhos do mesmo pai e da mesma mãe", sem
+#                marcar gênero — "irmã" cai no mesmo sinal
+#     mãe        o verbete é MAMÃE, não MÃE
+#
+# TIA e TIO não existem no INES em forma nenhuma (o único verbete parecido é
+# TIARA). Lacuna real — pergunte na aula.
+
+mãe
+pai
+vô
+vó
+irmão
+irmã
+família
+tia
+
+pessoal
+sozinho
+junto
+reunião

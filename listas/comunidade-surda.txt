@@ -1,0 +1,21 @@
+# Comunidade surda
+#
+# O INES tem dois verbetes para SURDO, e a diferença entre eles é o próprio
+# assunto — não é ambiguidade de busca:
+#
+#     SURDO1  "indivíduo pertencente a uma comunidade surda"      identidade
+#     SURDO2  "privado, total ou parcialmente, do sentido da audição"  audição
+#
+# Os dois viram cards separados. Vale saber qual é qual: o primeiro fala de
+# pertencer a uma cultura com língua própria, o segundo descreve uma condição.
+#
+# "surdo mudo" entra com "=" para virar card de palavra, não frase. O INES tem
+# SURDO e MUDO separados, mas não o composto — e é bom que não tenha. O termo é
+# rejeitado pela comunidade surda: pessoas surdas têm as cordas vocais
+# funcionando, e juntar as duas coisas confunde não ouvir com não poder falar.
+# O card existe para você reconhecer o termo e saber por que não usá-lo (ver
+# NOTAS_DE_LINGUA em gerador.py).
+
+surdo
+
+= surdo mudo

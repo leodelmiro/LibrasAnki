@@ -1,0 +1,29 @@
+# Verbos
+#
+# Escreva como você fala: o gerador leva ao infinitivo do INES sozinho
+# ("mora" acha MORAR, "atrasado" acha ATRASAR).
+#
+# Vários têm mais de um verbete e viram cards separados, porque o INES registra
+# sentidos distintos: IR tem 6, CHEGAR tem 3, e AJUDAR, SAIR, VIAJAR e PAGAR
+# têm 2 cada. Não é falha de busca — confira na aula qual cabe em cada situação.
+#
+# ATRASADO, DESCANSO e DESCULPA entram pelo verbo: o INES cataloga ATRASAR,
+# DESCANSAR e DESCULPAR, não o particípio nem o substantivo derivado.
+
+aprender
+chegar
+ir
+sair
+viajar
+passear
+morar
+trabalhar
+dirigir
+fazer
+comer
+pagar
+ajudar
+perguntar
+repetir
+descanso
+desculpa

@@ -1,0 +1,8 @@
+# Cores
+#
+# PRETO tem dois verbetes no INES, com descrições diferentes — viram dois cards
+# separados, como qualquer homônimo. Confira qual a professora usa.
+
+vermelho
+verde
+preto

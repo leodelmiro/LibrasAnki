@@ -18,6 +18,10 @@ from collections import defaultdict
 LEMAS = {
     "APRENDENDO": "APRENDER",
     "CHEGUEI": "CHEGAR",
+    # O INES cataloga o verbo, não o particípio nem o substantivo derivado.
+    "ATRASADO": "ATRASAR",
+    "DESCANSO": "DESCANSAR",
+    "DESCULPA": "DESCULPAR",
     "ESTA": "ESTAR",
     "ESTAO": "ESTAR",
     "ESTOU": "ESTAR",
@@ -53,6 +57,13 @@ SINONIMOS = {
     # mesmo sinal de PRÓPRIO (mão em P batendo na palma da outra mão).
     "PERTENCIMENTO": "PROPRIO",
     "PERTENCE": "PROPRIO",
+    # O INES tem um verbete só para os dois avós — "VOVÓ-VOVÔ", descrito como
+    # "o avô, pai do pai ou da mãe; a avó, mãe do pai ou da mãe". Como "vô" e
+    # "vó" normalizam os dois para "VO", uma entrada cobre o par.
+    "VO": "VOVÓ-VOVÔ",
+    # IRMÃO é descrito genericamente ("filhos do mesmo pai e da mesma mãe"),
+    # sem marcar gênero — mesmo caso de ELE/ELA.
+    "IRMA": "IRMÃO",
 }
 
 # Falsos amigos: termos que a normalização resolveria para um verbete de sentido

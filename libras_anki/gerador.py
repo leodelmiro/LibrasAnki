@@ -94,6 +94,12 @@ NOTAS_DE_LINGUA = {
              "(apostila).",
     "vossa": "Sem verbete no INES. Indica plural: configuração de mão em P "
              "(apostila).",
+    # Não é lacuna do dicionário: é termo que a comunidade surda rejeita, e o
+    # card existe para reconhecê-lo e saber por quê.
+    "surdo mudo": "Termo incorreto, rejeitado pela comunidade surda: pessoas "
+                  "surdas têm as cordas vocais funcionando, e o termo confunde "
+                  "não ouvir com não poder falar. Diga apenas SURDO. O INES tem "
+                  "SURDO e MUDO como sinais separados, e não o composto.",
 }
 
 
