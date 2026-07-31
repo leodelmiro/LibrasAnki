@@ -9,6 +9,9 @@
 #
 # ATRASADO, DESCANSO e DESCULPA entram pelo verbo: o INES cataloga ATRASAR,
 # DESCANSAR e DESCULPAR, não o particípio nem o substantivo derivado.
+#
+# Cuidado com "gosto": no INES é o do paladar ("o que é percebido pelo paladar"),
+# sinal diferente de GOSTAR. Escreva "gostar" ou "gosta" — as duas caem no verbo.
 
 aprender
 chegar
@@ -21,6 +24,7 @@ trabalhar
 dirigir
 fazer
 comer
+gostar
 pagar
 ajudar
 perguntar
