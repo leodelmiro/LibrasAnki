@@ -73,6 +73,15 @@ COMPOSTOS = {
     # acertar: o "prazer" do cumprimento é GOSTAR, e nenhum dos três verbetes
     # de PRAZER serve — PRAZER1 e PRAZER2 são "alegria, satisfação" e PRAZER3
     # é "satisfação sexual". Resolver pela palavra levaria ao sinal errado.
+    # "gosto" aqui é o verbo, mas resolve sozinho para o substantivo GOSTO
+    # ("percebido pelo paladar") no passo de normalização — nem lema nem
+    # sinônimo alcançam. Declarar os sinais é a única forma de acertar.
+    "gosto de laranja": Composto(
+        "GOSTAR + LARANJA. O 'gosto' daqui é o verbo; o INES tem GOSTO como "
+        "substantivo do paladar, que é outro sinal.",
+        ["GOSTAR", "LARANJA"],
+        [],
+    ),
     "prazer em conhecer você": Composto(
         "Composto: GOSTAR + CONHECER + VOCÊ. Não se usa o sinal de PRAZER "
         "aqui — o cumprimento se faz com GOSTAR.",

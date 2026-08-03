@@ -12,6 +12,12 @@
 #
 # Cuidado com "gosto": no INES é o do paladar ("o que é percebido pelo paladar"),
 # sinal diferente de GOSTAR. Escreva "gostar" ou "gosta" — as duas caem no verbo.
+# Não dá para redirecionar por lema: "gosto" resolve sozinho no passo de
+# normalização e nunca chegaria à tabela. Para o sentido, use "paladar".
+#
+# As negações ficam em vocabulario-diverso.txt como frase (NÃO + verbo), e não
+# como sinal único: o INES tem NÃO1 (negação geral) e NÃO2 ("cobra, censura"),
+# e a negação em LIBRAS costuma vir com expressão facial, não só com o sinal.
 
 aprender
 chegar
@@ -26,6 +32,13 @@ fazer
 comer
 gostar
 pagar
+querer
+escolher
+preferir
+sonhar
+estudar
+dormir
+começar
 ajudar
 perguntar
 repetir

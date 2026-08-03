@@ -1,0 +1,43 @@
+# Perguntas — prática dos interrogativos
+#
+# A regra que estas frases treinam: em LIBRAS o interrogativo vai para o FIM.
+# O português põe na frente, e é aí que se erra.
+#
+#     português                          LIBRAS
+#     ─────────                          ──────
+#     O que você gosta de fazer?         VOCÊ GOSTAR FAZER O-QUE
+#     Quem mora com você?                MORAR COM VOCÊ QUEM
+#     Quanto é um kg de carne?           UM KG CARNE QUANTO
+#
+# Os cards mostram só a frase em português e os vídeos do vocabulário — a ordem
+# você treina sinalizando, não decorando notação. As linhas acima ficam aqui
+# como referência de estudo.
+#
+# Cobertura destas frases: 47 de 55 palavras (85%). Os três buracos são
+# conhecidos: "Libras" e "Por" são falsos amigos bloqueados de propósito (o INES
+# só tem LIBRA, a unidade de peso, e PÔR, o verbo colocar), e "pamonha" não
+# existe na base.
+
+qual o prato mais famoso da sua cidade?
+temos pizza e pamonha, qual deles você quer?
+quando você começou a estudar Libras?
+quando você vai viajar?
+quantos irmãos você tem?
+
+# --- exercício: fazer perguntas sobre uma afirmação ---
+#
+# A professora dá a frase, e você pergunta sobre ela usando cada interrogativo.
+# As afirmações entram como card para você ter o vocabulário na mão.
+
+Eu estudei Libras ontem.
+Por que você estudou Libras?
+Quando você estudou Libras?
+Onde você estudou Libras?
+Com quem você estudou Libras?
+
+Eu dormi às 10 horas.
+Quero aprender a dirigir.
+
+# Entra com "=" porque "gosto" resolveria para o substantivo do paladar, que é
+# outro sinal. Os componentes estão declarados em COMPOSTOS (gerador.py).
+= gosto de laranja

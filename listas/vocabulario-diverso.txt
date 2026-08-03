@@ -16,6 +16,8 @@
 
 tenho
 não tenho
+não quero
+não gosto
 
 amigo
 cinema
@@ -62,6 +64,15 @@ lanche
 carne
 carne moída
 milho
+laranja
+pizza
+prato
+famoso
+paladar
+
+# PAMONHA não existe no INES. Lacuna real — aparece na frase da pizza, em
+# frases-perguntas.txt, e o verso do card avisa.
+pamonha
 
 # --- lugares e eventos ---
 

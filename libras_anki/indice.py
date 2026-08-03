@@ -25,8 +25,19 @@ LEMAS = {
     "ESTA": "ESTAR",
     "ESTAO": "ESTAR",
     "ESTOU": "ESTAR",
+    "COMECOU": "COMEÇAR",
+    "DORMI": "DORMIR",
     "ESTUDA": "ESTUDAR",
+    "ESTUDEI": "ESTUDAR",
+    "ESTUDOU": "ESTUDAR",
     "GOSTA": "GOSTAR",
+    # "gosto" NÃO entra aqui: ele resolve sozinho no passo de normalização, para
+    # o substantivo GOSTO ("o que é percebido pelo paladar"). Um lema nunca
+    # chegaria a rodar. Escreva "gostar" para o verbo — e "paladar" para o
+    # sentido, que tem verbete próprio.
+    "PREFERIDO": "PREFERIR",
+    "QUER": "QUERER",
+    "QUERO": "QUERER",
     "MINHA": "MEU",
     "MORA": "MORAR",
     "SAIU": "SAIR",
