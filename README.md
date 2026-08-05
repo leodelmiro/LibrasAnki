@@ -82,6 +82,8 @@ tudo bem                        palavra (o INES tem verbetes com espaço)
 Meu carro é vermelho.           frase
 = bom dia                       força palavra, mesmo sem verbete no INES
 # comentário                    ignorado
+
+terça-feira @yt https://youtu.be/AAA 1:23-1:27      vídeo de fora do INES
 ```
 
 O tipo sai do prefixo `=` e da consulta ao dicionário: se a linha inteira resolve como verbete, é palavra; senão, com mais de uma palavra significativa, é frase.
@@ -133,11 +135,33 @@ Nem toda palavra da frase tem sinal no INES. As que não têm ficam de fora do v
 
 Os componentes são declarados à mão em `gerador.py`, não deduzidos de dividir a frase — "de" não tem sinal, e `BOM` tem três sentidos diferentes no INES (situação agradável, característica positiva, roupa que veste bem). Onde a escolha saiu por eliminação em vez de conhecimento confirmado, a nota leva `confirmar-sinal` e o card diz o que checar.
 
+### Vídeos de fora do INES
+
+O dicionário tem lacunas reais — TERÇA-FEIRA, TELEFONE, PAMONHA não existem lá. Quando você achar o sinal em vídeo num canal de LIBRAS, o `@yt` põe ele no card em vez do aviso "grave na aula":
+
+```
+terça-feira @yt https://youtu.be/AAA 1:23-1:27      início-fim
+telefone    @yt https://youtu.be/BBB 0:41+3         início+duração
+pamonha     @yt https://youtu.be/CCC                clipe curto, sem recorte
+```
+
+Os tempos aceitam `M:SS`, `H:MM:SS` ou segundos. Vale também em linha de frase — aí o clipe vai no topo do verso, como "a frase sinalizada", antes dos vídeos do vocabulário.
+
+**O link tem prioridade.** Numa palavra que o INES já cobre, o vídeo de fora *substitui* o do INES no card: se você foi atrás de outro vídeo, é ele que você quer decorar. O card registra a troca na observação e leva a tag `video-externo`, então dá para achar todos depois.
+
+Funciona com qualquer site que o [yt-dlp](https://github.com/yt-dlp/yt-dlp) suporte, não só YouTube. Cada vídeo é baixado inteiro uma vez para `.cache/externos/` e recortado dali — um vídeo de aula de dez minutos serve dezenas de sinais pagando um download só. Os clipes saem em WebM e MP4, como os do INES, e ficam limitados a 480 px de largura.
+
+Se um download falhar (link fora do ar, rede caída), o card volta ao que era — vídeo do INES, ou o aviso de lacuna — e a falha aparece no relatório. Quando os downloads começarem a falhar sem motivo aparente, o YouTube mudou o player: `.venv/Scripts/python.exe -m pip install -U yt-dlp` costuma resolver.
+
+> **"This video is not available" num vídeo que abre no navegador.** Acontece: alguns vídeos públicos recusam o client padrão do yt-dlp e respondem normalmente ao do Android. Por isso `youtube.py` tenta os dois em ordem (`CLIENTES`) em vez de desistir no primeiro. Dois dos vídeos usados aqui só vêm por esse caminho.
+
 ### Tags para filtrar no Anki
 
 | Tag | O que é |
 |---|---|
 | `falta-video` | sem vídeo no INES — grave na aula |
+| `video-externo` | o vídeo veio de um link `@yt`, não do INES |
+| `forma-incorreta` | não existe em LIBRAS; o card mostra o sinal correto no lugar |
 | `composto` | sem verbete próprio; o card mostra os componentes em sequência |
 | `confirmar-sinal` | a escolha do componente saiu por eliminação — confirme na aula |
 | `video-suspeito` | o vídeo é usado por outro verbete; confira antes de decorar |
@@ -157,6 +181,7 @@ libras_anki/
 ├── indice.py     busca tolerante a acento, caixa e flexão
 ├── grupos.py     variante vs. homônimo, e anomalias da base
 ├── midia.py      download dos vídeos e conversão para WebM
+├── youtube.py    vídeos de fora do INES: download, recorte e cache
 ├── modelo.py     modelos de nota e templates dos cards
 ├── listas.py     leitura das listas de estudo
 ├── numeros.py    regras dos números 1–10
@@ -165,7 +190,7 @@ libras_anki/
 
 listas/           suas listas de estudo
 out/              baralhos gerados
-.cache/           dicionário e vídeos baixados (não versionar)
+.cache/           dicionário e vídeos baixados, do INES e de fora (não versionar)
 openspec/         proposta, design, specs e tarefas
 ```
 
@@ -181,6 +206,8 @@ openspec status --change libras-anki-deck
 ## Sobre os dados
 
 Os vídeos vêm do dicionário do INES, material público do governo brasileiro, usados aqui para **estudo pessoal**. O `.apkg` gerado não é para redistribuição.
+
+Os clipes trazidos por `@yt` são de terceiros e ficam sob a mesma regra: estudo pessoal, sem redistribuir. Baixar vídeo do YouTube contraria os termos de serviço deles, ainda que para uso próprio — vale saber, e decidir.
 
 O dicionário tem lacunas e alguns erros — o projeto trata isso explicitamente em vez de esconder. Palavras sem material viram cards marcados em vez de sumirem em silêncio, e verbetes com dado inconsistente recebem aviso. O raciocínio por trás de cada tratamento está em `openspec/changes/libras-anki-deck/design.md`.
 

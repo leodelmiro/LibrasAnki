@@ -24,7 +24,25 @@ TAG_FALTA_VIDEO = "falta-video"
 
 # -crf 32 -b:v 0 é VP9 em qualidade constante; nos vídeos do INES (240x176) sai
 # menor que o MP4 original. -an descarta áudio, que esses vídeos não têm.
-ARGS_VP9 = ["-c:v", "libvpx-vp9", "-crf", "32", "-b:v", "0", "-an"]
+# `yuv420p` fixo porque VP9 4:4:4 é profile 1, e nem todo webview decodifica
+# profile diferente de 0. As fontes do INES já são 4:2:0; as de fora nem sempre.
+ARGS_VP9 = ["-c:v", "libvpx-vp9", "-crf", "32", "-b:v", "0", "-pix_fmt", "yuv420p", "-an"]
+
+# H.264 para o iOS, que não decodifica WebM. `yuv420p` e `+faststart` porque o
+# WKWebView recusa alguns pixel formats e gosta do moov no começo do arquivo.
+ARGS_H264 = [
+    "-c:v", "libx264", "-preset", "medium", "-crf", "28",
+    "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an",
+]
+
+
+def caminho_ffmpeg():
+    """Caminho do ffmpeg empacotado; None se a dependência não estiver instalada."""
+    try:
+        import imageio_ffmpeg
+    except ImportError:
+        return None
+    return imageio_ffmpeg.get_ffmpeg_exe()
 
 
 class Midia:
@@ -41,14 +59,9 @@ class Midia:
         self._ffmpeg = None
 
     def _obter_ffmpeg(self):
-        """Caminho do ffmpeg empacotado; None se a dependência não estiver instalada."""
+        """Caminho do ffmpeg empacotado, memorizado entre chamadas."""
         if self._ffmpeg is None:
-            try:
-                import imageio_ffmpeg
-            except ImportError:
-                self._ffmpeg = False
-            else:
-                self._ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+            self._ffmpeg = caminho_ffmpeg() or False
         return self._ffmpeg or None
 
     def converter_webm(self, mp4):
