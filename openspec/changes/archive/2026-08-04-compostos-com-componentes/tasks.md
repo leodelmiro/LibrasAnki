@@ -48,4 +48,4 @@
 - [x] 7.3 Confirmar que a contagem por tipo não mudou (123 notas, mesma distribuição)
 - [x] 7.4 Confirmar que `falta-video` caiu de 25 para 19 notas e que `composto`=6 e `confirmar-sinal`=4
 - [x] 7.5 Confirmar que itens não compostos (`ótimo`, `terça-feira`) seguem com `falta-video` e o aviso
-- [ ] 7.6 Reimportar no Anki e conferir que os 6 compostos ganharam os vídeos sem perder histórico — **passo manual no app**
+- [x] 7.6 Reimportar no Anki e conferir que os 6 compostos ganharam os vídeos sem perder histórico — **passo manual no app**

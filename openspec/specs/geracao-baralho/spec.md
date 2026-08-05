@@ -88,7 +88,7 @@ O sistema MUST produzir um arquivo `.apkg` com toda a mídia embutida, importáv
 
 ### Requirement: Relatório de execução
 
-O sistema MUST emitir, ao final da geração, um resumo das notas criadas e de tudo que exigiu atenção. O relatório MUST NOT conter seção de glosa pendente.
+O sistema MUST emitir, ao final da geração, um resumo das notas criadas e de tudo que exigiu atenção. O relatório MUST NOT conter seção de glosa pendente. O relatório MUST listar como cada composto foi montado, para que a escolha dos componentes seja revisável sem abrir o Anki.
 
 #### Scenario: Resumo ao final
 
@@ -105,11 +105,18 @@ O sistema MUST emitir, ao final da geração, um resumo das notas criadas e de t
 - **WHEN** o relatório é emitido
 - **THEN** nenhum bloco "SEM GLOSA" é impresso, porque a glosa deixou de fazer parte do baralho
 
+#### Scenario: Compostos listados
+
+- **WHEN** compostos foram montados a partir dos componentes
+- **THEN** o relatório lista cada um com a sequência usada, no formato `boa tarde = BOA + TARDE`
+
 ### Requirement: Modelo de nota por tipo de item
 
 O sistema MUST gerar uma nota por sinal, com os templates de card determinados pelo tipo do item. Palavras MUST ter dois templates — recepção e produção. Frases MUST ter um único template — sinalizar. O sistema MUST NOT gerar card de gramática em nenhum dos modelos: o baralho pratica sinais, não notação escrita.
 
 A nota de palavra MUST conter apenas os campos `Palavra`, `Videos`, `Descricao`, `Origem` e `Observacao`. O sistema MUST NOT incluir exemplo, glosa, configuração de mão nem classe gramatical na nota de palavra.
+
+O campo de vídeo da nota de palavra MUST aceitar duas formas de conteúdo: o vídeo do sinal próprio, ou os vídeos de componentes rotulados quando o item for composto. Componentes MUST ser rotulados individualmente com o nome do sinal e apresentados na ordem de sinalização; o sistema MUST NOT rotulá-los como variantes, porque não são formas alternativas do mesmo sinal.
 
 #### Scenario: Card de recepção
 
@@ -135,4 +142,9 @@ A nota de palavra MUST conter apenas os campos `Palavra`, `Videos`, `Descricao`,
 
 - **WHEN** uma nota de frase é criada
 - **THEN** exatamente um card é gerado
+
+#### Scenario: Nota de item composto
+
+- **WHEN** a nota de um composto é exibida
+- **THEN** o campo de vídeo traz os vídeos dos componentes em sequência, cada um sob o nome do seu sinal, e não sob rótulo de variante
 
