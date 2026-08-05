@@ -11,11 +11,12 @@ from collections import namedtuple
 
 import genanki
 
-from . import grupos, indice, ines, listas, midia, modelo, numeros
+from . import grupos, indice, ines, listas, midia, modelo, numeros, youtube
 
 TAG_FALTA_VIDEO = "falta-video"
 TAG_COMPOSTO = "composto"
 TAG_CONFIRMAR_SINAL = "confirmar-sinal"
+TAG_FORMA_INCORRETA = "forma-incorreta"
 
 # Um composto não tem verbete próprio, mas os componentes têm — então o card
 # mostra os vídeos deles em sequência, em vez de ficar sem vídeo nenhum.
@@ -56,6 +57,15 @@ COMPOSTOS = {
         ["BOA1", "NOITE1"],
         ["BOA"],
     ),
+    # Não se sinaliza FIM + SEMANA. O INES tem os dois verbetes, e traduzir o
+    # português palavra por palavra daria um par que ninguém usa: em LIBRAS o
+    # fim de semana se diz nomeando os dois dias.
+    "fim de semana": Composto(
+        "Composto: SÁBADO + DOMINGO. Não se sinaliza FIM + SEMANA — em LIBRAS o "
+        "fim de semana se diz nomeando os dois dias.",
+        ["SÁBADO", "DOMINGO"],
+        [],
+    ),
     # "de" é palavra funcional, sem sinal próprio: sobra NADA.
     "de nada": Composto(
         "Expressão composta, sem verbete próprio no INES. O sinal de NADA é a "
@@ -89,26 +99,60 @@ COMPOSTOS = {
         [],
     ),
     # "tenha" e "um" não entram: o primeiro não tem verbete, o segundo é
-    # numeral e não cabe aqui. A ordem exata desta é a menos certa das seis.
+    # numeral e não cabe aqui. O "fim de semana" segue a mesma regra da entrada
+    # acima — SÁBADO + DOMINGO, não FIM + SEMANA.
     "tenha um bom fim de semana": Composto(
-        "Expressão composta. Os componentes que o INES tem estão aí, mas "
-        "confirme a sequência na aula.",
-        ["BOM1", "FIM", "SEMANA"],
+        "Expressão composta: BOM + SÁBADO + DOMINGO. Confirme a sequência na aula.",
+        ["BOM1", "SÁBADO", "DOMINGO"],
         ["BOM", "a sequência"],
     ),
+}
+
+# Formas que não existem em LIBRAS porque são transporte direto do português.
+# O card continua existindo — é justamente ele que desfaz o engano — e mostra o
+# vídeo do sinal correto, em vez de ficar esperando gravação da aula.
+Correcao = namedtuple("Correcao", "nota sinais")
+
+CORRECOES = {
+    "teu": Correcao(
+        "Não existe TEU em LIBRAS. O possessivo de 2ª pessoa é SEU — é este o "
+        "sinal a fazer.",
+        ["SEU"],
+    ),
+    "tua": Correcao(
+        "Não existe TUA em LIBRAS. O possessivo de 2ª pessoa é SEU, que não "
+        "marca gênero — é este o sinal a fazer.",
+        ["SEU"],
+    ),
+}
+
+# Verbetes cujo vídeo o INES declara mas não entrega (404), e cujo sinal é o
+# mesmo de outro verbete que entrega. Emprestar o vídeo do irmão dá o que
+# estudar hoje, em vez de deixar o card esperando gravação de um sinal que o
+# próprio dicionário já mostra em outra entrada.
+#
+# Só entra aqui quando os dois são o mesmo sinal de fato — não sinônimo
+# aproximado, não sentido vizinho.
+MESMO_SINAL = {
+    "FEMININO": ("MULHER", "Mesmo sinal de MULHER."),
+}
+
+TAG_MESMO_SINAL = "mesmo-sinal"
+
+# Observações presas ao sinal, para o que o verbete do INES não diz sozinho.
+NOTAS_DE_SINAL = {
+    # O INES tem um verbete só para os dois avós, descrito como "o avô, pai do
+    # pai ou da mãe; a avó, mãe do pai ou da mãe".
+    "VOVÓ-VOVÔ": "Um sinal só para os dois avós: vovó é o mesmo sinal de vovô, "
+                 "marcado com o feminino.",
 }
 
 # Explicações de casos que parecem lacuna mas são gramática da língua.
 NOTAS_DE_LINGUA = {
     "ela": "Em LIBRAS o pronome de 3ª pessoa é apontar e não marca gênero: "
            "'ele' e 'ela' são o mesmo sinal.",
-    # TEU/TUA e VOSSO/VOSSA não têm verbete no INES (nem um masculino para
-    # servir de âncora, como SEU/DELE/NOSSO têm). Descrição da apostila, para
-    # gravar na aula.
-    "teu": "Sem verbete no INES. Configuração de mão em P, apontando para a "
-           "pessoa com quem se fala (apostila).",
-    "tua": "Sem verbete no INES. Configuração de mão em P, apontando para a "
-           "pessoa com quem se fala (apostila).",
+    # TEU/TUA saíram daqui: não são lacuna do dicionário, são forma que não
+    # existe na língua — estão em CORRECOES, apontando para SEU.
     "vosso": "Sem verbete no INES. Indica plural: configuração de mão em P "
              "(apostila).",
     "vossa": "Sem verbete no INES. Indica plural: configuração de mão em P "
@@ -131,9 +175,13 @@ class Relatorio:
         self.nao_resolvidos = []
         self.falta_video = []
         self.compostos = []
+        self.correcoes = []
+        self.mesmo_sinal = []
         self.video_suspeito = []
         self.grupo_misto = []
         self.midia = {}
+        self.externos = {}
+        self.problemas = []
 
     def conta(self, tipo):
         self.por_tipo[tipo] = self.por_tipo.get(tipo, 0) + 1
@@ -151,6 +199,13 @@ class Relatorio:
                 f"{self.midia.get('convertidos', 0)} convertidos para WebM"
             )
 
+        if self.externos.get("clipes") or self.externos.get("do_cache"):
+            linhas.append(
+                f"vídeos de fora: {self.externos.get('clipes', 0)} clipes gerados, "
+                f"{self.externos.get('do_cache', 0)} do cache, "
+                f"{self.externos.get('fontes_baixadas', 0)} downloads"
+            )
+
         def bloco(titulo, itens, dica=None):
             if not itens:
                 return
@@ -164,10 +219,22 @@ class Relatorio:
               "geradas assim mesmo; sem componentes, ficam com tag falta-video")
         bloco("COMPOSTOS", self.compostos,
               "sem verbete próprio, montados com os vídeos dos componentes")
+        bloco("FORMA INCORRETA", self.correcoes,
+              "não existe em LIBRAS; o card mostra o sinal correto")
+        bloco("VÍDEO EMPRESTADO", self.mesmo_sinal,
+              "o vídeo próprio dá 404 no INES; é o mesmo sinal de outro verbete")
         bloco("VÍDEO SUSPEITO", self.video_suspeito,
               "o mesmo arquivo é usado por outro verbete — confira antes de decorar")
         bloco("GRUPO MISTO", self.grupo_misto,
               "parte do grupo tem o mesmo sentido, parte não — separados por precaução")
+        bloco("PROBLEMAS NAS LISTAS", self.problemas,
+              "a linha virou card, só o @yt foi ignorado — corrija e regere")
+        bloco("VÍDEO EXTERNO FALHOU", [
+            f"{rotulo} — {motivo}" for rotulo, motivo in
+            sorted(self.externos.get("falhas", {}).items())
+        ], "o card ficou com o vídeo do INES, ou sem vídeo")
+        bloco("CLIPE LONGO", self.externos.get("longos", []),
+              f"acima de {youtube.SEGUNDOS_SUSPEITOS}s — faltou o intervalo no @yt?")
         return "\n".join(linhas)
 
 
@@ -178,6 +245,7 @@ class Gerador:
         self.indice = indice.Indice(self.verbetes)
         self.sinais, self.anomalias = grupos.construir(self.verbetes)
         self.recursos = midia.Midia()
+        self.externos = youtube.Externos()
         self.baralho = modelo.criar_baralho(nome_baralho)
         self.relatorio = Relatorio()
         self.arquivos = set()
@@ -204,6 +272,21 @@ class Gerador:
             pares.append((mp4.name, webm.name if webm else None))
         return pares
 
+    def _par_externo(self, externo):
+        """Baixa e recorta o `@yt` da linha. Devolve (mp4, webm) ou None.
+
+        None quando não havia link ou quando o download falhou — nos dois casos
+        o card segue com o que o INES tiver. A falha fica no relatório.
+        """
+        if externo is None:
+            return None
+        mp4, webm = self.externos.obter_par(externo)
+        if mp4 is None:
+            return None
+        self.arquivos.add(str(mp4))
+        self.arquivos.add(str(webm))
+        return mp4.name, webm.name
+
     def _campos_auxiliares(self, verbete):
         return {
             "origem": self.tabelas["origem"].get(str(verbete.get("origem")), {}).get("nome", ""),
@@ -211,14 +294,40 @@ class Gerador:
 
     # -- notas -------------------------------------------------------------
 
-    def _nota_de_sinal(self, sinal, tags_extra=()):
+    def _nota_de_sinal(self, sinal, tags_extra=(), externo=None):
         chave = ("sinal", sinal.ident, sinal.videos[0] if sinal.videos else sinal.palavra)
         if chave in self._vistos:
             return
         self._vistos.add(chave)
 
-        pares = self._pares(sinal.videos)
         tags = set(sinal.tags) | set(tags_extra)
+        observacao = ""
+
+        # O link tem prioridade: quem escreveu `@yt` numa palavra que o INES já
+        # cobre quis justamente outro vídeo. O do INES sai do card, mas o fato
+        # de existir fica registrado na observação e na tag.
+        par = self._par_externo(externo)
+        if par:
+            pares = [par]
+            tags.add(youtube.TAG)
+            observacao = f"Vídeo de fonte externa, não do INES: {externo.rotulo}."
+            if sinal.videos:
+                observacao += " O INES também tem vídeo próprio para esta palavra."
+        else:
+            pares = self._pares(sinal.videos)
+
+        nome = indice.raiz(sinal.palavra)
+        if not pares and nome in MESMO_SINAL:
+            alvo, nota = MESMO_SINAL[nome]
+            blocos, _ = self._componentes([alvo])
+            if blocos:
+                pares = [(blocos[0][1], blocos[0][2])]
+                tags.add(TAG_MESMO_SINAL)
+                observacao = f"{observacao} {nota}".strip()
+                self.relatorio.mesmo_sinal.append(f"{sinal.palavra} = {alvo}")
+
+        if nome in NOTAS_DE_SINAL:
+            observacao = f"{observacao} {NOTAS_DE_SINAL[nome]}".strip()
 
         if not pares:
             # O aviso já vai dentro do campo Videos (modelo.html_videos); aqui só
@@ -236,6 +345,7 @@ class Gerador:
                 palavra=sinal.palavra,
                 pares_video=pares,
                 descricao=sinal.descricao,
+                observacao=observacao,
                 tags=tags,
                 guid=modelo.guid_para(
                     sinal.ident, sinal.videos[0] if sinal.videos else sinal.palavra
@@ -266,11 +376,13 @@ class Gerador:
             blocos.append((indice.raiz(verbete["palavra"]).strip(), pares[0][0], pares[0][1]))
         return blocos, faltando
 
-    def _nota_ausente(self, texto, tags_extra=()):
+    def _nota_ausente(self, texto, tags_extra=(), externo=None):
         """Palavra sem verbete próprio: nota marcada, nunca omissão.
 
         Se for um composto conhecido, o card mostra os vídeos dos componentes em
         sequência — dá o que estudar hoje, em vez de esperar a gravação da aula.
+        Um `@yt` na linha passa na frente de tudo: com o sinal inteiro em vídeo,
+        não há motivo para montá-lo peça por peça.
         """
         chave = ("ausente", texto.lower())
         if chave in self._vistos:
@@ -279,7 +391,9 @@ class Gerador:
 
         minusculo = texto.strip().lower()
         composto = COMPOSTOS.get(minusculo)
+        correcao = CORRECOES.get(minusculo)
         observacao = (composto.nota if composto else None) or \
+            (correcao.nota if correcao else None) or \
             NOTAS_DE_LINGUA.get(minusculo) or \
             "Sem verbete no dicionário do INES — preencher com material da aula."
 
@@ -290,7 +404,6 @@ class Gerador:
         componentes, faltando = ([], [])
         tags = set(tags_extra)
         if composto:
-            componentes, faltando = self._componentes(composto.sinais)
             tags.add(TAG_COMPOSTO)
             if composto.confirmar:
                 tags.add(TAG_CONFIRMAR_SINAL)
@@ -299,19 +412,30 @@ class Gerador:
                     + ", ".join(composto.confirmar)
                     + "."
                 )
+        elif correcao:
+            tags.add(TAG_FORMA_INCORRETA)
+
+        par = self._par_externo(externo)
+        if par:
+            tags.add(youtube.TAG)
+            observacao += f" Vídeo de fonte externa: {externo.rotulo}."
+        elif composto or correcao:
+            componentes, faltando = self._componentes(
+                composto.sinais if composto else correcao.sinais
+            )
             if faltando:
                 observacao += f" Sem vídeo para: {', '.join(faltando)}."
 
-        # Com os componentes disponíveis já há o que praticar, então não é
-        # `falta-video`: nada precisa ser gravado para o card funcionar.
-        if not componentes:
+        # Com vídeo — próprio ou dos componentes — já há o que praticar, então
+        # não é `falta-video`: nada precisa ser gravado para o card funcionar.
+        if not componentes and not par:
             tags.add(TAG_FALTA_VIDEO)
             self.relatorio.falta_video.append(texto)
 
         self.baralho.add_note(
             modelo.criar_nota(
                 palavra=texto.strip().upper(),
-                pares_video=[],
+                pares_video=[par] if par else [],
                 descricao="",
                 observacao=observacao,
                 tags=tags,
@@ -321,9 +445,9 @@ class Gerador:
         )
         self.relatorio.nao_resolvidos.append(texto)
         if componentes:
-            self.relatorio.compostos.append(
-                f"{texto} = {' + '.join(r for r, _, _ in componentes)}"
-            )
+            resumo = f"{texto} = {' + '.join(r for r, _, _ in componentes)}"
+            destino = self.relatorio.correcoes if correcao else self.relatorio.compostos
+            destino.append(resumo)
         self.relatorio.conta("ausente")
 
     def _nota_frase(self, item):
@@ -348,6 +472,16 @@ class Gerador:
         if ausentes:
             nota = [NOTAS_DE_LINGUA[p.lower()] for p in ausentes if p.lower() in NOTAS_DE_LINGUA]
             observacao = " ".join(nota)
+
+        # A frase inteira sinalizada vale mais que a soma do vocabulário: ela
+        # mostra a ordem e o encadeamento, que é justamente o que o card pede.
+        # Por isso vem no topo, antes das palavras soltas.
+        par = self._par_externo(item.video)
+        if par:
+            vocabulario.insert(0, ("a frase sinalizada", par[0], par[1]))
+            tags.add(youtube.TAG)
+            observacao = (observacao + " " if observacao else "") + \
+                f"Vídeo de fonte externa: {item.video.rotulo}."
 
         self.baralho.add_note(
             modelo.criar_nota_frase(
@@ -414,6 +548,9 @@ class Gerador:
 
     def adicionar(self, itens):
         for item in itens:
+            if item.problema:
+                self.relatorio.problemas.append(f"{item.local} — {item.problema}")
+
             if item.tipo == listas.TIPO_FRASE:
                 self._nota_frase(item)
                 continue
@@ -424,16 +561,33 @@ class Gerador:
 
             resolucao = self.indice.resolver(item.texto)
             if not resolucao:
-                self._nota_ausente(item.texto)
+                self._nota_ausente(item.texto, externo=item.video)
                 continue
 
+            # Homônimos viram um card cada. O `@yt` vai para o primeiro: um link
+            # só não tem como dizer qual dos sentidos ele ilustra, e espalhá-lo
+            # por todos poria o mesmo vídeo em cards de significados diferentes.
+            #
+            # Contar sinais e não verbetes: variantes do mesmo sinal (VOVÓ-VOVÔ1
+            # e VOVÓ-VOVÔ2) são dois verbetes e um card só, e aí não há escolha
+            # nenhuma a avisar.
+            atingidos = []
             for verbete in resolucao.verbetes:
                 sinal = self._por_verbete.get((verbete["ident"], verbete.get("video")))
-                if sinal:
-                    self._nota_de_sinal(sinal)
+                if sinal is None or any(s is sinal for s in atingidos):
+                    continue
+                self._nota_de_sinal(sinal, externo=item.video if not atingidos else None)
+                atingidos.append(sinal)
+
+            if item.video and len(atingidos) > 1:
+                self.relatorio.problemas.append(
+                    f"{item.local} — '{item.texto}' vira {len(atingidos)} cards no "
+                    f"INES; o @yt foi para o primeiro ({atingidos[0].palavra})"
+                )
 
     def escrever(self, destino):
         self.relatorio.midia = self.recursos.resumo()
+        self.relatorio.externos = self.externos.resumo()
         pacote = genanki.Package(self.baralho, media_files=sorted(self.arquivos))
         pacote.write_to_file(str(destino))
         return destino

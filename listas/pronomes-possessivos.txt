@@ -11,15 +11,14 @@
 #     Dele/dela    mão em P apontando para a 3ª pessoa, para os lados
 #     Nosso/nossa  mão em G (indicador) ou mão aberta de ombro a ombro
 #
-# TEU/TUA e VOSSO/VOSSA não têm verbete no INES nem uma forma masculina para
-# servir de âncora — ficam com falta-video mesmo, com a descrição de mão da
-# apostila para gravar na aula:
+# TEU/TUA não são lacuna do dicionário: são transporte do português. Em LIBRAS
+# o possessivo de 2ª pessoa é SEU, e é esse o sinal a fazer. Os dois cards
+# continuam no baralho justamente para desfazer o engano — mostram o vídeo de
+# SEU e levam a tag `forma-incorreta` (ver CORRECOES em gerador.py).
 #
-#     Teu/tua      mão em P apontando para a pessoa com quem se fala
-#     Vosso/Vossa  plural, mão em P
-#
-# Os quatro existem no dicionário do VLibras (TEU, TUA, VOSSO, VOSSA), então a
-# lacuna é do INES e não da língua. Confirme o sinal com a professora.
+# VOSSO/VOSSA aí sim não têm verbete no INES nem forma masculina para servir de
+# âncora — a lacuna é do dicionário, não da língua (existem no VLibras). Os dois
+# levam o mesmo link: o vídeo mostra as duas formas, que são o mesmo sinal.
 #
 # PERTENCIMENTO e PERTENCE são glosas alternativas da apostila para o mesmo
 # sinal de PRÓPRIO (mão em P batendo na palma da outra mão) — não são
@@ -39,5 +38,5 @@ pertence
 
 teu
 tua
-vosso
-vossa
+vosso @yt https://www.youtube.com/watch?v=vrJai97g8z8
+vossa @yt https://www.youtube.com/watch?v=vrJai97g8z8

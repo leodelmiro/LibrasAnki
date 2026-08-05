@@ -89,6 +89,18 @@ FALSOS_AMIGOS = {
     "POR": "no INES 'por' sem acento cai em PÔR (colocar), verbo diferente",
 }
 
+# Verbetes que a normalização cola em outro de sentido completamente diferente,
+# e que não interessam ao currículo. Sem isso a palavra pedida geraria dois
+# cards: um do sentido que você quer, outro de um homônimo acidental.
+#
+# Diferente de FALSOS_AMIGOS, que bloqueia o termo inteiro: aqui o termo resolve
+# normalmente, só este verbete é que sai do índice.
+IGNORADOS = {
+    # "carne" e "CARNÊ" viram a mesma chave quando a normalização tira o acento.
+    # CARNÊ é bloco de pagamento — nada a ver com o alimento, e fora do escopo.
+    "CARNÊ",
+}
+
 # O currículo escreve números como dígito ("dormir às 10 horas"), a base os
 # guarda por extenso. Escopo 1–10, faixa em que o dicionário é completo.
 NUMERAIS = {
@@ -149,7 +161,7 @@ class Indice:
     """Busca tolerante sobre os verbetes do INES."""
 
     def __init__(self, verbetes):
-        self.verbetes = list(verbetes)
+        self.verbetes = [v for v in verbetes if raiz(v["palavra"]) not in IGNORADOS]
         self._por_palavra = defaultdict(list)
         self._por_raiz = defaultdict(list)
         for verbete in self.verbetes:

@@ -3,3 +3,7 @@ requests>=2.31
 # ffmpeg empacotado como binário: converte os MP4 do INES para WebM/VP9, que é
 # o formato que o webview do Anki desktop consegue decodificar.
 imageio-ffmpeg>=0.4
+# Baixa os vídeos declarados com @yt nas listas. Sem versão fixa de propósito:
+# o YouTube muda o player de tempos em tempos e o yt-dlp corre atrás. Quando um
+# download começar a falhar sem motivo, `pip install -U yt-dlp` costuma resolver.
+yt-dlp>=2025.1.1

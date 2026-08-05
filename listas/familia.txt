@@ -10,16 +10,17 @@
 #     mãe        o verbete é MAMÃE, não MÃE
 #
 # TIA e TIO não existem no INES em forma nenhuma (o único verbete parecido é
-# TIARA). Lacuna real — pergunte na aula.
+# TIARA), e o vídeo de VOVÓ-VOVÔ dá 404 no servidor. Os dois vêm de fora agora.
+# "vó" não leva link: cai no mesmo verbete de "vô", então é um card só.
 
 mãe
 pai
-vô
+vô @yt https://www.youtube.com/watch?v=jO1lFXFVIvo
 vó
 irmão
 irmã
 família
-tia
+tia @yt https://www.youtube.com/watch?v=1Zxj4NDW2QE
 
 pessoal
 sozinho

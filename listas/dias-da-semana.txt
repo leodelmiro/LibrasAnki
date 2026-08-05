@@ -1,12 +1,13 @@
 # Dias da semana
 #
 # O INES tem segunda, quarta, quinta, sexta, sábado e domingo — e falta
-# exatamente TERÇA-FEIRA. Buraco da base, não erro de busca.
-# "FIM DE SEMANA" também não existe como verbete no INES.
+# exatamente TERÇA-FEIRA. Buraco da base, não erro de busca: TERÇA_FEIRA existe
+# no dicionário do VLibras, então a lacuna é do INES e não da língua.
 #
-# Os dois existem no dicionário do VLibras, como TERÇA_FEIRA e FIM_DE_SEMANA.
-# Ou seja: a lacuna é do INES, não da língua — vale perguntar o sinal na aula
-# em vez de supor que não existe.
+# "FIM DE SEMANA" é outro caso: não é lacuna nenhuma. Em LIBRAS se sinaliza
+# SÁBADO + DOMINGO — nomeando os dois dias. O card é montado assim (ver
+# COMPOSTOS em gerador.py); traduzir FIM + SEMANA do português daria um par de
+# sinais que ninguém usa.
 
 segunda-feira
 quarta-feira
@@ -19,5 +20,5 @@ hoje
 amanhã
 ontem
 
-= terça-feira
+= terça-feira @yt https://www.youtube.com/watch?v=CwWBbBQSmuM
 = fim de semana
