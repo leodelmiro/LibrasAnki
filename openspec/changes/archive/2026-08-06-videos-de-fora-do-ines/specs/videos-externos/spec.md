@@ -56,6 +56,36 @@ O sistema MUST produzir os dois formatos usados pelo baralho — WebM/VP9 e MP4/
 - **WHEN** o client padrão responde que o vídeo não está disponível
 - **THEN** o sistema tenta os demais clients configurados antes de considerar o download falho
 
+### Requirement: O clipe declarado vale para o sinal, não para a linha
+
+Um vídeo declarado numa linha de palavra MUST valer para o sinal que aquela linha resolve, e não apenas para a nota daquela linha. Onde quer que o sinal apareça no baralho — inclusive no vocabulário do verso de uma frase — o clipe declarado MUST ter precedência sobre o vídeo do INES, pela mesma razão que tem no card da palavra: quem foi atrás de outro vídeo quer estudar aquele, e ver dois vídeos diferentes do mesmo sinal em cards diferentes ensina duas versões da mesma coisa.
+
+O sistema MUST indexar as declarações antes de gerar qualquer nota. As listas são lidas em ordem, e uma frase pode ser processada antes da lista de vocabulário que declara o clipe de uma de suas palavras.
+
+Para palavra que não resolve contra o dicionário, a correspondência MUST ser feita pelo texto normalizado do item, e não pelo verbete — é o que permite a um clipe de `libras` servir as frases que falam de Libras.
+
+O verso da frase MUST registrar quais palavras vieram de fora do INES, na observação e por tag, para que a origem do vídeo continue rastreável onde ele é exibido.
+
+#### Scenario: Clipe declarado numa lista serve o verso de uma frase
+
+- **WHEN** uma lista de vocabulário declara `dormir @yt <url>` e outra lista traz a frase "Eu dormi às 10 horas."
+- **THEN** o verso da frase mostra o clipe declarado no lugar do vídeo do INES, e a nota registra que o vídeo veio de fora
+
+#### Scenario: Frase lida antes da declaração
+
+- **WHEN** o arquivo de frases é lido antes do arquivo que declara o `@yt` daquela palavra
+- **THEN** o clipe é usado assim mesmo, porque as declarações são indexadas antes de qualquer nota ser gerada
+
+#### Scenario: Palavra sem verbete usada em várias frases
+
+- **WHEN** uma palavra sem verbete no INES declara um clipe e aparece em várias frases
+- **THEN** todas elas mostram o clipe, em vez de listá-la como sem sinal
+
+#### Scenario: Vídeo do INES declarado mas não entregue
+
+- **WHEN** o verbete de uma palavra da frase aponta um arquivo que o servidor não entrega, e existe clipe declarado para ela
+- **THEN** o verso mostra o clipe, em vez de a palavra cair no aviso de sem sinal
+
 ### Requirement: Aviso de clipe longo demais para um sinal
 
 O sistema MUST avisar quando um clipe pronto ultrapassar a duração plausível de um sinal, para expor o caso de um vídeo inteiro ter entrado no baralho por esquecimento do trecho. A duração MUST ser medida no arquivo gerado, e o sistema MUST NOT avisar apenas por ausência de trecho na declaração.

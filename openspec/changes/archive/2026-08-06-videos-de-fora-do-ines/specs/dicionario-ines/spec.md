@@ -20,7 +20,7 @@ O sistema MUST NOT emprestar vídeo entre verbetes de sinais apenas parecidos: m
 - **WHEN** uma nota referencia um vídeo já presente no cache
 - **THEN** nenhuma requisição de rede é feita
 
-#### Scenario: Download falha sem alternativa
+#### Scenario: Download falha
 
 - **WHEN** a requisição de um vídeo não retorna sucesso, nenhum outro verbete mostra o mesmo sinal e nenhuma fonte externa foi declarada
 - **THEN** a nota é gerada com a tag `falta-video` e a falha é registrada no relatório

@@ -12,10 +12,11 @@ Há um segundo caso, diferente do primeiro: a palavra tem vídeo no INES e mesmo
 - O vídeo é baixado com `yt-dlp`, recortado com ffmpeg e convertido para o mesmo par de formatos dos vídeos do INES — WebM/VP9 e MP4/H.264 — porque a razão é a mesma: o webview do desktop não decodifica H.264 e o iOS não decodifica WebM.
 - **O link tem prioridade sobre o INES.** Numa palavra que o dicionário já cobre, o clipe de fora substitui o vídeo do INES no card. Quem foi atrás de outro vídeo quis outro vídeo; o card registra a troca na observação e leva a tag `video-externo`.
 - Vale para palavra, para item sem verbete e para frase. Na frase o clipe vai no topo do verso, rotulado "a frase sinalizada", antes dos vídeos do vocabulário — a frase inteira mostra a ordem e o encadeamento, que é o que o card pede.
+- **O link vale para o sinal, não para a linha.** Declarado uma vez, o clipe também aparece no vocabulário do verso das frases que usam aquela palavra, e vence o vídeo do INES lá também. É o que resolve o verbete que declara arquivo que o servidor não entrega: `DORMIR` aponta para `dormir2Sm_Prog001.mp4`, que dá 404 enquanto `dormirSm_Prog001.mp4` existe, e sem isso as frases com o verbo caíam no aviso apesar do clipe já baixado. A frase registra na observação quais palavras vieram de fora.
 - O vídeo é baixado inteiro uma vez para `.cache/externos/` e recortado dali. Um vídeo de aula de dez minutos serve dezenas de sinais pagando um download só.
 - Falha de download não derruba nada: o card volta ao que era — vídeo do INES, ou o aviso de lacuna — e a falha vai para o relatório com o motivo. Linha com `@yt` malformado vira card normal, com o problema reportado em `arquivo:linha`.
 - Três blocos novos no relatório: `PROBLEMAS NAS LISTAS`, `VÍDEO EXTERNO FALHOU` e `CLIPE LONGO` (clipe pronto acima de 30s, medido no arquivo — sinal nenhum dura isso).
-- 10 links escritos nas listas, cobrindo `terça-feira`, `tia`, `vô`, `vosso`, `vossa`, `ótimo`, `dormir`, `pessoa`, `telefone` e `pamonha`.
+- 16 links escritos nas listas. Dez cobrindo lacuna ou 404 do INES — `terça-feira`, `tia`, `vô`, `vosso`, `vossa`, `ótimo`, `dormir`, `pessoa`, `telefone`, `pamonha` — e mais `libras`, `kg` e `mais ou menos`, que o dicionário não tem; `folga`, `longe` e `cidade` entram por escolha, substituindo vídeo do INES que funciona.
 
 **Fora de escopo:** buscar vídeo automaticamente, `<iframe>` do YouTube no card (falha no AnkiMobile com "Error 153"), e os 9 cards de ordinal, que são gerados em código e não vêm de lista nenhuma.
 
@@ -44,7 +45,7 @@ Há um segundo caso, diferente do primeiro: a palavra tem vídeo no INES e mesmo
 - `libras_anki/youtube.py` (novo): `VideoExterno` interpreta URL e trecho; `Externos` baixa, recorta e cacheia, contabilizando clipes, downloads e falhas.
 - `libras_anki/listas.py`: `_separar_video` tira o `@yt` antes de `_interpretar`; `Item` ganha `video`, `problema` e `local`.
 - `libras_anki/midia.py`: `caminho_ffmpeg()` extraído para uso comum; `ARGS_H264` novo; `ARGS_VP9` ganha `-pix_fmt yuv420p`, porque VP9 4:4:4 é profile 1 e nem todo webview decodifica profile diferente de 0.
-- `libras_anki/gerador.py`: `_par_externo`; prioridade do link em `_nota_de_sinal`, `_nota_ausente` e `_nota_frase`; `Relatorio` ganha `externos` e `problemas`.
+- `libras_anki/gerador.py`: `_par_externo`; prioridade do link em `_nota_de_sinal`, `_nota_ausente` e `_nota_frase`; `_indexar_externos` percorre os itens antes da geração e registra cada `@yt` pelo sinal que resolve, ou pelo texto quando não resolve; `Relatorio` ganha `externos` e `problemas`.
 - `libras_anki/config.py`: `CACHE_EXTERNOS`.
 - `requirements.txt`: `yt-dlp`, sem versão fixa — o YouTube muda o player e o yt-dlp corre atrás.
 

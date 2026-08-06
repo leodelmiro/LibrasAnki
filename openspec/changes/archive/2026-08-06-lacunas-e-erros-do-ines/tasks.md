@@ -61,4 +61,4 @@
 - [x] 9.2 Confirmar o bloco "FORMA INCORRETA" com `teu = SEU` e `tua = SEU`
 - [x] 9.3 Confirmar o bloco "VÍDEO EMPRESTADO" com `FEMININO = MULHER`
 - [x] 9.4 Confirmar `fim de semana = SÁBADO + DOMINGO` e `tenha um bom fim de semana = BOM + SÁBADO + DOMINGO` no bloco COMPOSTOS
-- [ ] 9.5 Reimportar no Anki e conferir que `teu`, `tua` e `feminino` ganharam vídeo sem perder histórico, e que a nota de `CARNÊ` foi removida à mão do navegador — **passo manual no app**
+- [x] 9.5 Reimportar no Anki e conferir que `teu`, `tua` e `feminino` ganharam vídeo sem perder histórico, e que a nota de `CARNÊ` foi removida à mão do navegador — **passo manual no app**

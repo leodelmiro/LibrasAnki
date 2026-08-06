@@ -81,19 +81,29 @@ Substituir, com o registro em outro canal: a observação diz que o vídeo é de
 
 Vai para o primeiro, e o relatório avisa qual recebeu. A contagem é de **sinais**, não de verbetes: `vô` resolve para VOVÓ-VOVÔ1 e VOVÓ-VOVÔ2, que são variantes do mesmo sinal e viram um card só — aí não há escolha nenhuma a avisar.
 
-### 6. "Clipe longo" medido no arquivo, não no `@yt`
+### 6. O link pertence ao sinal, e por isso precisa de um pré-passo
+
+A primeira versão tratava o `@yt` como propriedade da linha: o clipe ia para a nota daquela linha e acabava ali. O verso das frases continuava montando o vocabulário só com vídeo do INES.
+
+Isso deixava dois buracos. O visível: `DORMIR` tem verbete, mas o campo `video` aponta `dormir2Sm_Prog001.mp4`, que dá 404 — enquanto `dormirSm_Prog001.mp4` existe no servidor. Erro de cadastro da base, não lacuna. O card da palavra estava resolvido pelo clipe; as duas frases com o verbo continuavam no aviso "sem sinal no INES", com o vídeo já baixado em cache. O invisível: quem declara um clipe porque prefere aquele vídeo via o do INES reaparecer no verso da frase, decorando duas versões do mesmo sinal.
+
+O link passa a valer para o sinal. Isso obriga a um pré-passo: as listas são lidas em ordem alfabética, `frases-*.txt` vem antes de `verbos.txt` e `vocabulario-diverso.txt`, então na hora de montar o verso o clipe ainda não seria conhecido. `_indexar_externos` percorre todos os itens antes de qualquer nota sair.
+
+O índice tem duas chaves porque há dois casos. Palavra que resolve é indexada pelo sinal — mesma regra do card, o link vale para o primeiro verbete resolvido (decisão 5). Palavra que não resolve, como `libras` ou `pamonha`, é indexada pelo texto normalizado: não há verbete a que se prender, e é justamente esse caso que cobre as sete frases que falam de Libras.
+
+### 7. "Clipe longo" medido no arquivo, não no `@yt`
 
 Um `@yt` sem trecho pode ser um vídeo de dez minutos entrando inteiro por esquecimento, ou um clipe de quatro segundos que já é só o sinal. A primeira versão avisava sempre que faltava o trecho, e disparou nos 7 links reais — todos entre 3 e 16 segundos. Falso positivo em 100% dos casos é ruído, e ruído treina a ignorar o relatório.
 
 A duração passou a ser lida do clipe pronto, com o ffmpeg. Só avisa acima de 30 segundos, que é bem mais que qualquer sinal.
 
-### 7. Dois player clients do yt-dlp
+### 8. Dois player clients do yt-dlp
 
 Dois dos vídeos usados respondiam "This video is not available" ao client padrão e abriam normalmente no navegador. Testados os seis clients disponíveis: só o `android` os entrega; `ios`, `mweb`, `web_embedded` e `web_safari` dizem "Requested format is not available" e `tv` diz "DRM protected".
 
 `CLIENTES = ["default", "android"]` faz o yt-dlp tentar em ordem em vez de desistir no primeiro. Não é contornar restrição de acesso: são vídeos públicos, é incompatibilidade de client.
 
-### 8. Erro de escrita na linha não derruba a geração
+### 9. Erro de escrita na linha não derruba a geração
 
 Uma URL torta poderia abortar a leitura da lista com a posição do erro. Mas o projeto já decidiu o contrário para o resto — nada é descartado em silêncio, e nada aborta o baralho inteiro por causa de um item. Uma linha com `@yt` malformado vira card normal, sem o vídeo, e o problema aparece no fim como `familia.txt:18 — não parece uma URL: 'url-torta'`.
 

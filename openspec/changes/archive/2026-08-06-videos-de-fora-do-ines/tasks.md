@@ -54,13 +54,25 @@
 - [x] 7.4 Registrar no README que os clipes de terceiros seguem a regra de estudo pessoal, e que baixar contraria os termos do YouTube
 - [x] 7.5 Escrever os 10 links nas listas e atualizar os comentários que afirmavam lacuna sem saída
 
-## 8. Verificação
+## 8. O link vale para o sinal, não para a linha
 
-- [x] 8.1 Testar a interpretação de trechos válidos e inválidos
-- [x] 8.2 Recortar de uma fonte sintética e conferir duração exata, escala e codec dos dois formatos
-- [x] 8.3 Baixar de verdade e conferir o clipe: 4,00s, 320x240, VP9 profile 0 e H.264 yuv420p
-- [x] 8.4 Gerar um baralho de teste com palavra ausente, palavra do INES, frase e duas linhas malformadas
-- [x] 8.5 Confirmar que 3 clipes da mesma URL geram 1 download só
-- [x] 8.6 Confirmar que o link vai para o primeiro sinal em homônimo e que variante não dispara o aviso
-- [x] 8.7 Gerar o baralho completo e confirmar `falta-video` de 20 para 9, sem falhas e sem clipe longo
-- [ ] 8.8 Reimportar no Anki e conferir que as 10 palavras ganharam vídeo sem perder histórico, no desktop e no AnkiMobile — **passo manual no app**
+- [x] 8.1 Confirmar que o verbete `DORMIR` aponta `dormir2Sm_Prog001.mp4` com 404, enquanto `dormirSm_Prog001.mp4` responde 200 — erro de cadastro da base, não lacuna
+- [x] 8.2 Criar `Gerador._indexar_externos`, chamado no início de `adicionar`, antes de qualquer nota sair
+- [x] 8.3 Indexar por sinal quando o item resolve, e por texto normalizado quando não resolve, cobrindo `libras` e `pamonha`
+- [x] 8.4 Extrair `_chave_de_sinal`, já que `ident` se repete em três verbetes da base e não identifica um Sinal sozinho
+- [x] 8.5 Dar precedência ao clipe no vocabulário do verso em `_nota_frase`, acima do vídeo do INES
+- [x] 8.6 Registrar na observação da frase quais palavras vieram de fora, e marcar a nota com `video-externo`
+- [x] 8.7 Corrigir a observação do card ausente, que mandava "preencher com material da aula" mesmo já tendo clipe
+- [x] 8.8 Escrever os links de `folga`, `libras`, `cidade`, `kg` e `mais ou menos`, com os comentários das listas
+
+## 9. Verificação
+
+- [x] 9.1 Testar a interpretação de trechos válidos e inválidos
+- [x] 9.2 Recortar de uma fonte sintética e conferir duração exata, escala e codec dos dois formatos
+- [x] 9.3 Baixar de verdade e conferir o clipe: 4,00s, 320x240, VP9 profile 0 e H.264 yuv420p
+- [x] 9.4 Gerar um baralho de teste com palavra ausente, palavra do INES, frase e duas linhas malformadas
+- [x] 9.5 Confirmar que 3 clipes da mesma URL geram 1 download só
+- [x] 9.6 Confirmar que o link vai para o primeiro sinal em homônimo e que variante não dispara o aviso
+- [x] 9.7 Gerar o baralho completo e confirmar `falta-video` de 20 para 9, sem falhas e sem clipe longo
+- [x] 9.8 Auditar as 38 frases palavra por palavra e confirmar que o aviso "sem sinal no INES" cai de 15 frases para 1, sobrando `Lulu`
+- [x] 9.9 Reimportar no Anki e conferir que as palavras ganharam vídeo sem perder histórico, no desktop e no AnkiMobile — **passo manual no app**
