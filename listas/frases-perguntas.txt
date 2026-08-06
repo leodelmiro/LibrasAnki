@@ -8,15 +8,19 @@
 #     O que você gosta de fazer?         VOCÊ GOSTAR FAZER O-QUE
 #     Quem mora com você?                MORAR COM VOCÊ QUEM
 #     Quanto é um kg de carne?           UM KG CARNE QUANTO
+#     Por que você estuda Libras?        VOCÊ ESTUDAR LIBRAS PORQUE
 #
 # Os cards mostram só a frase em português e os vídeos do vocabulário — a ordem
 # você treina sinalizando, não decorando notação. As linhas acima ficam aqui
 # como referência de estudo.
 #
-# Cobertura destas frases: 47 de 55 palavras (85%). Os três buracos são
-# conhecidos: "Libras" e "Por" são falsos amigos bloqueados de propósito (o INES
-# só tem LIBRA, a unidade de peso, e PÔR, o verbo colocar), e "pamonha" não
-# existe na base.
+# "por que" e "porque" são o mesmo sinal: a distinção é ortografia do português,
+# não da língua. O par está em EXPRESSOES (indice.py), que o reconhece antes de
+# quebrar a frase — separados, "que" é funcional e "por" cairia em PÔR.
+#
+# Estas frases estão cobertas por inteiro. "Libras" e "pamonha" não vêm do INES
+# (falso amigo bloqueado e lacuna da base); os dois entram por vídeo de fora,
+# declarado em vocabulario-diverso.txt.
 
 qual o prato mais famoso da sua cidade?
 temos pizza e pamonha, qual deles você quer?

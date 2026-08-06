@@ -37,6 +37,9 @@ escolher
 preferir
 sonhar
 estudar
+# O verbete de DORMIR aponta para "dormir2Sm_Prog001.mp4", que dá 404 — embora
+# "dormirSm_Prog001.mp4" exista no servidor. Erro de cadastro da base, não
+# lacuna: o vídeo de fora cobre o card e as frases que usam o verbo.
 dormir @yt https://www.youtube.com/watch?v=_NO9BRSuwAU
 começar
 ajudar

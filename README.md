@@ -116,7 +116,23 @@ Sem vídeo no INES, o aviso "Sem vídeo disponível — grave na aula" aparece n
 
 O baralho pratica **sinais, não notação escrita** — não existe card de glosa em nenhum modelo. Palavras carregam só o essencial para reconhecer e produzir o sinal.
 
-Nem toda palavra da frase tem sinal no INES. As que não têm ficam de fora do vocabulário do verso e entram, em vez disso, num aviso: "Sem sinal no INES: ...". Exemplo real do baralho — a frase "Vocês estão aprendendo Libras." mostra os vídeos de VOCÊ, ESTAR e APRENDER, mas "Libras" vai para o aviso porque a própria palavra "Libras" não é verbete do dicionário.
+Nem toda palavra da frase tem sinal no INES. As que não têm ficam de fora do vocabulário do verso e entram, em vez disso, num aviso: "Sem sinal no INES: ...". Exemplo real do baralho — a frase "O nome do meu cachorro é Lulu." mostra os vídeos de NOME, MEU e CACHORRO, mas "Lulu" vai para o aviso: nome próprio se faz por datilologia, soletrando.
+
+O aviso é o último recurso, não o primeiro. Antes dele a palavra tem duas chances: um vídeo de fora declarado em qualquer lista (abaixo) e a tabela `EXPRESSOES` de `indice.py`, para o que é um sinal só escrito em várias palavras — "por que" vira PORQUE, "mais ou menos" vira um sinal, "o que" vira QUE, tudo antes da frase ser quebrada em palavras. Sem isso os pedaços se perdem ("que" é funcional) ou enganam ("mais ou menos" daria MAIS + OU + MENOS, três sinais sem relação com aproximação).
+
+**Quando o INES tem mais de um sinal para a palavra, o verso mostra todos.** Rotulados pela descrição do dicionário, lado a lado, para você escolher pelo sentido da frase na hora de sinalizar:
+
+```
+┌────────────────────────────────────────────────┐
+│ Quem — Forma de identificar o proprietário…    │
+│ Quem — Forma de identificar o autor de uma…    │
+│ Quem — Forma de identificar ou nominar alguém  │
+│ mora    [vídeo]                                │
+│ você    [vídeo]                                │
+└────────────────────────────────────────────────┘
+```
+
+Escolher sozinho seria chutar: "qual" tem três sentidos no INES e o primeiro é o de identificar um *local*, que não serve para "qual o prato mais famoso". Quem sabe qual é o certo é quem está estudando, e a informação para decidir está ali. Esses cards levam a tag `escolher-sentido`, e o relatório lista todos ao fim da geração.
 
 **Números** — quando o INES traz dois verbetes para o mesmo número, vira card de contraste em vez de vocabulário isolado, porque a mesma mão muda de sentido pelo movimento.
 
@@ -149,6 +165,8 @@ Os tempos aceitam `M:SS`, `H:MM:SS` ou segundos. Vale também em linha de frase 
 
 **O link tem prioridade.** Numa palavra que o INES já cobre, o vídeo de fora *substitui* o do INES no card: se você foi atrás de outro vídeo, é ele que você quer decorar. O card registra a troca na observação e leva a tag `video-externo`, então dá para achar todos depois.
 
+**O link vale para o sinal, não para a linha.** Declarado uma vez, o clipe também aparece no verso das frases que usam aquela palavra — e vence o vídeo do INES lá também, para você não decorar duas versões do mesmo sinal. É o que resolve as palavras cujo vídeo o INES cadastra mas não entrega: `DORMIR` aponta para `dormir2Sm_Prog001.mp4`, que dá 404, e sem o clipe as duas frases com o verbo caíam no aviso. A frase leva a tag `video-externo` e diz na observação quais palavras vieram de fora. Vale também para palavra sem verbete nenhum: um `@yt` em `libras` cobre as sete frases que falam de Libras.
+
 Funciona com qualquer site que o [yt-dlp](https://github.com/yt-dlp/yt-dlp) suporte, não só YouTube. Cada vídeo é baixado inteiro uma vez para `.cache/externos/` e recortado dali — um vídeo de aula de dez minutos serve dezenas de sinais pagando um download só. Os clipes saem em WebM e MP4, como os do INES, e ficam limitados a 480 px de largura.
 
 Se um download falhar (link fora do ar, rede caída), o card volta ao que era — vídeo do INES, ou o aviso de lacuna — e a falha aparece no relatório. Quando os downloads começarem a falhar sem motivo aparente, o YouTube mudou o player: `.venv/Scripts/python.exe -m pip install -U yt-dlp` costuma resolver.
@@ -164,6 +182,7 @@ Se um download falhar (link fora do ar, rede caída), o card volta ao que era �
 | `forma-incorreta` | não existe em LIBRAS; o card mostra o sinal correto no lugar |
 | `composto` | sem verbete próprio; o card mostra os componentes em sequência |
 | `confirmar-sinal` | a escolha do componente saiu por eliminação — confirme na aula |
+| `escolher-sentido` | o INES tem mais de um sinal para uma palavra da frase; o verso mostra todos |
 | `video-suspeito` | o vídeo é usado por outro verbete; confira antes de decorar |
 | `grupo-misto` | classificação ambígua, separado por precaução |
 | `numero` `ordinal` `frase` | categoria |

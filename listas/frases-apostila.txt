@@ -3,10 +3,10 @@
 # Cada frase vira um card "Sinalize esta frase": português na frente, e no verso
 # os vídeos do vocabulário reconhecido, com aviso do que não tem sinal no INES.
 #
-# Cobertura medida destas 13 frases: 44 de 47 palavras (94%).
-# Ausentes: "Libras" (falso amigo bloqueado — o INES só tem LIBRA, a unidade de
-# peso), "Terça-feira" (buraco da base) e "Lulu" (nome próprio, que se faz por
-# datilologia — soletrando).
+# Ausente destas 13 frases: só "Lulu", nome próprio, que se faz por datilologia
+# — soletrando. "Libras" (falso amigo bloqueado — o INES só tem LIBRA, a unidade
+# de peso) e "Terça-feira" (buraco da base) entram por vídeo de fora, declarado
+# nas listas de vocabulário.
 #
 # A 14ª entra com "=" logo abaixo: "prazer em conhecer você" não se monta
 # resolvendo palavra por palavra. O cumprimento é GOSTAR + CONHECER + VOCÊ, e
