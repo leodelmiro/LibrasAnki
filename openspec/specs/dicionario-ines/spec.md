@@ -29,7 +29,11 @@ O sistema MUST obter o dataset do INES a partir de `https://dicionario.ines.gov.
 
 ### Requirement: Busca tolerante a acento, caixa e flexão
 
-O sistema MUST resolver termos escritos em português corrente contra os verbetes do INES, aplicando em ordem: correspondência exata, normalização de acento e caixa, remoção de sufixo numérico, e uma tabela de lematização de flexões comuns.
+O sistema MUST resolver termos escritos em português corrente contra a base do INES, que é em caixa alta, acentuada, no infinitivo e com sufixo numérico para desambiguar homônimos. A resolução MUST tentar, em ordem: exato, normalizado, sem sufixo numérico, plural simples, lematizado e por sinônimo.
+
+A remoção do sufixo numérico MUST tolerar espaço antes do número. A base usa os dois formatos — `ABANDONAR2` colado e `DIA 1` com espaço — e tratar apenas o primeiro deixa palavras inalcançáveis e parte em dois grupos verbetes que pertencem ao mesmo sinal.
+
+O sistema MUST poder excluir verbetes do índice quando a normalização os tornar indistinguíveis de outro de sentido sem relação. O termo pedido MUST continuar resolvendo normalmente; apenas o verbete excluído MUST NOT aparecer no resultado. Isso é distinto do bloqueio de falso amigo, que recusa o termo inteiro e devolve o motivo.
 
 #### Scenario: Correspondência direta
 
@@ -53,8 +57,28 @@ O sistema MUST resolver termos escritos em português corrente contra os verbete
 
 #### Scenario: Termo sem correspondência
 
-- **WHEN** a lista contém `atrasado`, que não existe em nenhuma forma
+- **WHEN** a lista contém um termo que não existe em nenhuma forma, como `média`
 - **THEN** o sistema reporta o termo como não resolvido em vez de omiti-lo silenciosamente
+
+#### Scenario: Sufixo numérico separado por espaço
+
+- **WHEN** a lista contém `dia`, cujos verbetes no INES são `DIA 1` a `DIA 4`
+- **THEN** os quatro verbetes são resolvidos, do mesmo modo que aconteceria com o sufixo colado
+
+#### Scenario: Verbete com os dois formatos de sufixo
+
+- **WHEN** um sinal tem verbetes escritos nos dois formatos, como `MAIS 1` junto de `MAIS2` a `MAIS6`
+- **THEN** todos caem no mesmo grupo, em vez de serem classificados como sinais distintos
+
+#### Scenario: Falso amigo bloqueado
+
+- **WHEN** o usuário escreve um termo que a normalização levaria a um verbete de sentido completamente diferente
+- **THEN** a resolução falha com o motivo registrado, em vez de devolver o verbete errado
+
+#### Scenario: Verbete excluído por colisão de normalização
+
+- **WHEN** dois verbetes de sentidos sem relação viram a mesma chave depois da normalização e um deles está na lista de excluídos
+- **THEN** o termo resolve apenas para o verbete mantido, e uma única nota é gerada
 
 ### Requirement: Classificação de grupos com sufixo numérico
 
@@ -98,6 +122,12 @@ O sistema MUST detectar inconsistências conhecidas do dataset e marcar as notas
 
 O sistema MUST baixar de `https://dicionario.ines.gov.br/public/media/palavras/videos/<video>` apenas os arquivos das palavras efetivamente solicitadas, mantendo-os em cache local.
 
+Quando a nota já tiver vídeo obtido de fora do INES, o sistema MUST NOT requisitar o vídeo do INES para ela: o arquivo não seria usado, e a rede é o recurso caro do processo.
+
+O sistema MUST admitir que a base declare o nome de um arquivo de vídeo que o servidor não entrega. Quando o download falhar e outro verbete do dicionário mostrar o mesmo sinal, a nota MUST usar o vídeo desse outro verbete, receber a tag `mesmo-sinal` e registrar na observação de onde o vídeo veio. Essa alternativa MUST ser tentada apenas depois de o download próprio falhar, para que a nota volte sozinha ao vídeo dela se o servidor for corrigido.
+
+O sistema MUST NOT emprestar vídeo entre verbetes de sinais apenas parecidos: mostrar um sinal por outro ensina o errado com aparência de certo.
+
 #### Scenario: Vídeo ainda não baixado
 
 - **WHEN** uma nota referencia um vídeo ausente do cache
@@ -110,11 +140,21 @@ O sistema MUST baixar de `https://dicionario.ines.gov.br/public/media/palavras/v
 
 #### Scenario: Download falha
 
-- **WHEN** a requisição de um vídeo não retorna sucesso
+- **WHEN** a requisição de um vídeo não retorna sucesso, nenhum outro verbete mostra o mesmo sinal e nenhuma fonte externa foi declarada
 - **THEN** a nota é gerada com a tag `falta-video` e a falha é registrada no relatório
+
+#### Scenario: Vídeo declarado que o servidor não entrega
+
+- **WHEN** o verbete tem nome de arquivo preenchido, o servidor responde 404 e outro verbete mostra o mesmo sinal
+- **THEN** a nota usa o vídeo do outro verbete, recebe `mesmo-sinal` e não recebe `falta-video`
 
 #### Scenario: Campo de imagem é ignorado
 
 - **WHEN** um verbete possui o campo `image` preenchido
 - **THEN** o sistema não tenta baixá-lo, pois o diretório `public/media/palavras/images/` retorna 404
+
+#### Scenario: Nota servida por vídeo externo
+
+- **WHEN** a linha da lista declara um vídeo de fora e o clipe é obtido
+- **THEN** o vídeo do INES daquele verbete não é requisitado
 

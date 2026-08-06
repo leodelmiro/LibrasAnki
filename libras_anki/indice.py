@@ -84,8 +84,9 @@ FALSOS_AMIGOS = {
     # "LIBRAS"[:-1] == "LIBRA", que no dicionário é a unidade de peso e o signo
     # do zodíaco, nada a ver com a língua de sinais.
     "LIBRAS": "no INES só existe LIBRA (unidade de peso / signo), não a língua",
-    # "por" (de "por que") sem acento normaliza igual a "PÔR", o verbo colocar —
-    # sinal completamente diferente do usado na pergunta "por quê".
+    # "por" sozinho, sem acento, normaliza igual a "PÔR", o verbo colocar —
+    # sinal completamente diferente. O "por" de "por que" não chega até aqui:
+    # o par vira PORQUE em EXPRESSOES, antes da frase ser quebrada.
     "POR": "no INES 'por' sem acento cai em PÔR (colocar), verbo diferente",
 }
 
@@ -245,8 +246,49 @@ VAZIAS = frozenset(
     "O A OS AS DE DO DA DOS DAS EM NO NA NUM UM UMA E AO AOS À ÀS PARA COM SE QUE".split()
 )
 
+# Sequências de palavras que são um sinal só. Precisam ser reconhecidas antes da
+# quebra em palavras, porque separadas os pedaços se perdem ou enganam.
+#
+# "por que": "que" é funcional e cai em VAZIAS, e "por" sozinho é falso amigo
+# (PÔR). O sinal da pergunta é PORQUE, o mesmo da conjunção — "por que" e
+# "porque" não se distinguem em LIBRAS, a diferença é ortografia do português.
+#
+# "mais ou menos": os três pedaços resolvem, e é justamente esse o problema —
+# daria MAIS 1 ("o que supera o outro"), OU e MENOS1 ("exceto"), três sinais que
+# não têm nada a ver com aproximação. A expressão não tem verbete no INES e
+# entra por vídeo de fora.
+# "o que": não é sinal composto nem sinal próprio, é o mesmo QUE — mas separado
+# some inteiro, porque "o" e "que" são as duas funcionais. Resolve para os dois
+# verbetes de QUE, e o verso da frase mostra os dois para você escolher.
+EXPRESSOES = {
+    ("MAIS", "OU", "MENOS"): "mais ou menos",
+    ("POR", "QUE"): "porque",
+    ("O", "QUE"): "que",
+}
+
+_MAIOR_EXPRESSAO = max(len(sequencia) for sequencia in EXPRESSOES)
+
 
 def palavras_da_frase(frase):
     """Extrai as palavras significativas de uma frase, ignorando as funcionais."""
-    encontradas = re.findall(r"[0-9A-Za-zÀ-ÿ]+(?:-[0-9A-Za-zÀ-ÿ]+)*", frase)
-    return [p for p in encontradas if len(p) > 1 and normalizar(p) not in VAZIAS]
+    brutas = re.findall(r"[0-9A-Za-zÀ-ÿ]+(?:-[0-9A-Za-zÀ-ÿ]+)*", frase)
+    palavras, i = [], 0
+    while i < len(brutas):
+        # Da maior para a menor: se um dia houver expressão que comece igual a
+        # outra, a mais longa é a que descreve o sinal inteiro.
+        expressao = None
+        for tamanho in range(_MAIOR_EXPRESSAO, 1, -1):
+            sequencia = tuple(normalizar(p) for p in brutas[i:i + tamanho])
+            if len(sequencia) == tamanho and sequencia in EXPRESSOES:
+                expressao = (EXPRESSOES[sequencia], tamanho)
+                break
+        if expressao:
+            palavras.append(expressao[0])
+            i += expressao[1]
+            continue
+
+        atual = brutas[i]
+        if len(atual) > 1 and normalizar(atual) not in VAZIAS:
+            palavras.append(atual)
+        i += 1
+    return palavras

@@ -157,6 +157,10 @@ NOTAS_DE_LINGUA = {
              "(apostila).",
     "vossa": "Sem verbete no INES. Indica plural: configuração de mão em P "
              "(apostila).",
+    # Não é lacuna: abreviatura se soletra. As duas letras têm verbete próprio
+    # no INES (K e G), e QUILO por extenso também — são coisas diferentes.
+    "kg": "Abreviatura, feita por datilologia: soletra-se K + G. O INES tem as "
+          "duas letras separadas e QUILO por extenso, mas não a abreviatura.",
     # Não é lacuna do dicionário: é termo que a comunidade surda rejeita, e o
     # card existe para reconhecê-lo e saber por quê.
     "surdo mudo": "Termo incorreto, rejeitado pela comunidade surda: pessoas "
@@ -164,6 +168,25 @@ NOTAS_DE_LINGUA = {
                   "não ouvir com não poder falar. Diga apenas SURDO. O INES tem "
                   "SURDO e MUDO como sinais separados, e não o composto.",
 }
+
+
+TAG_ESCOLHER_SENTIDO = "escolher-sentido"
+
+
+def _rotulo_de_sentido(palavra, sinal):
+    """Rótulo de um sentido no verso da frase: a palavra e o que o INES diz dela.
+
+    A descrição é o que permite escolher — sem ela sobrariam "qual 1, 2, 3",
+    que não dizem nada a quem está sinalizando.
+    """
+    descricao = (sinal.principal.get("descricao") or "").strip().rstrip(".")
+    return f"{palavra} — {descricao}" if descricao else f"{palavra} ({sinal.palavra})"
+
+
+def _chave_de_sinal(sinal):
+    """Identidade de um Sinal. `ident` sozinho não serve: verbetes diferentes
+    repetem ident na base, e é o par com o vídeo que os separa."""
+    return (sinal.ident, sinal.videos[0] if sinal.videos else sinal.palavra)
 
 
 class Relatorio:
@@ -179,6 +202,7 @@ class Relatorio:
         self.mesmo_sinal = []
         self.video_suspeito = []
         self.grupo_misto = []
+        self.escolha_de_sentido = []
         self.midia = {}
         self.externos = {}
         self.problemas = []
@@ -227,6 +251,8 @@ class Relatorio:
               "o mesmo arquivo é usado por outro verbete — confira antes de decorar")
         bloco("GRUPO MISTO", self.grupo_misto,
               "parte do grupo tem o mesmo sentido, parte não — separados por precaução")
+        bloco("ESCOLHA NO VERSO", self.escolha_de_sentido,
+              "o INES tem mais de um sinal; o verso mostra todos, você escolhe pelo sentido")
         bloco("PROBLEMAS NAS LISTAS", self.problemas,
               "a linha virou card, só o @yt foi ignorado — corrija e regere")
         bloco("VÍDEO EXTERNO FALHOU", [
@@ -257,6 +283,11 @@ class Gerador:
             for verbete in sinal.verbetes:
                 self._por_verbete[(verbete["ident"], verbete.get("video"))] = sinal
 
+        # Os `@yt` declarados nas linhas de palavra, para o verso das frases
+        # achar. Preenchidos em `adicionar`, antes de qualquer nota sair.
+        self._externo_de_sinal = {}
+        self._externo_de_texto = {}
+
     # -- mídia -------------------------------------------------------------
 
     def _pares(self, videos):
@@ -286,6 +317,24 @@ class Gerador:
         self.arquivos.add(str(mp4))
         self.arquivos.add(str(webm))
         return mp4.name, webm.name
+
+    def _externo_do_sinal(self, sinal):
+        """O `@yt` declarado para este sinal em alguma lista, se houver."""
+        return self._externo_de_sinal.get(_chave_de_sinal(sinal))
+
+    def _sinais_de(self, resolucao):
+        """Os sinais distintos de uma resolução, na ordem do dicionário.
+
+        Homônimos são um Sinal cada; variantes do mesmo sinal são vários
+        verbetes num Sinal só, e não podem virar duas opções de escolha.
+        """
+        sinais = []
+        for verbete in resolucao.verbetes:
+            sinal = self._por_verbete.get((verbete["ident"], verbete.get("video")))
+            if sinal is None or any(s is sinal for s in sinais):
+                continue
+            sinais.append(sinal)
+        return sinais
 
     def _campos_auxiliares(self, verbete):
         return {
@@ -392,10 +441,16 @@ class Gerador:
         minusculo = texto.strip().lower()
         composto = COMPOSTOS.get(minusculo)
         correcao = CORRECOES.get(minusculo)
+        par = self._par_externo(externo)
+
+        # Sem explicação própria, o card diz o que fazer a respeito — e isso
+        # muda conforme haja vídeo: mandar gravar na aula um sinal que já está
+        # ali em cima seria mandar refazer trabalho feito.
+        padrao = "Sem verbete no dicionário do INES." if par else \
+            "Sem verbete no dicionário do INES — preencher com material da aula."
         observacao = (composto.nota if composto else None) or \
             (correcao.nota if correcao else None) or \
-            NOTAS_DE_LINGUA.get(minusculo) or \
-            "Sem verbete no dicionário do INES — preencher com material da aula."
+            NOTAS_DE_LINGUA.get(minusculo) or padrao
 
         resolucao = self.indice.resolver(texto)
         if resolucao.motivo:
@@ -415,7 +470,6 @@ class Gerador:
         elif correcao:
             tags.add(TAG_FORMA_INCORRETA)
 
-        par = self._par_externo(externo)
         if par:
             tags.add(youtube.TAG)
             observacao += f" Vídeo de fonte externa: {externo.rotulo}."
@@ -451,27 +505,67 @@ class Gerador:
         self.relatorio.conta("ausente")
 
     def _nota_frase(self, item):
-        vocabulario, ausentes = [], []
+        vocabulario, ausentes, de_fora, escolhas = [], [], [], []
         for palavra in indice.palavras_da_frase(item.texto):
             resolucao = self.indice.resolver(palavra)
-            if not resolucao:
+            sinais = self._sinais_de(resolucao)
+
+            # O clipe de fora vem antes do INES, como no card da palavra: quem
+            # foi atrás de outro vídeo quer estudar aquele, e ver dois vídeos
+            # diferentes do mesmo sinal — um aqui, outro no card — só atrapalha.
+            # É também o que salva palavra cujo vídeo do INES dá 404 (DORMIR),
+            # que sem isso cairia no aviso mesmo tendo clipe declarado.
+            externo = (
+                self._externo_do_sinal(sinais[0]) if sinais
+                else self._externo_de_texto.get(indice.normalizar(palavra))
+            )
+            par = self._par_externo(externo)
+            if par:
+                vocabulario.append((palavra, par[0], par[1]))
+                de_fora.append(palavra)
+                continue
+
+            # Mais de um sentido: o card mostra todos, lado a lado e rotulados
+            # pela descrição do INES, para você escolher na hora de sinalizar.
+            # Escolher aqui pelo primeiro seria chutar — "qual" tem três
+            # sentidos, e o primeiro é o de identificar um local.
+            blocos = []
+            for sinal in sinais:
+                pares = self._pares(sinal.videos[:1])
+                if pares:
+                    blocos.append((sinal, pares[0]))
+
+            if not blocos:
                 ausentes.append(palavra)
                 continue
-            sinal = self._por_verbete.get(
-                (resolucao.verbetes[0]["ident"], resolucao.verbetes[0].get("video"))
-            )
-            videos = sinal.videos[:1] if sinal else []
-            pares = self._pares(videos)
-            if pares:
-                vocabulario.append((palavra, pares[0][0], pares[0][1]))
-            else:
-                ausentes.append(palavra)
+            if len(blocos) == 1:
+                (_, (mp4, webm)), = blocos
+                vocabulario.append((palavra, mp4, webm))
+                continue
+
+            escolhas.append(f"{palavra} ({len(blocos)})")
+            for sinal, (mp4, webm) in blocos:
+                vocabulario.append((_rotulo_de_sentido(palavra, sinal), mp4, webm))
 
         tags = {"frase"}
         observacao = ""
         if ausentes:
             nota = [NOTAS_DE_LINGUA[p.lower()] for p in ausentes if p.lower() in NOTAS_DE_LINGUA]
             observacao = " ".join(nota)
+
+        if de_fora:
+            tags.add(youtube.TAG)
+            observacao = (observacao + " " if observacao else "") + \
+                "Vocabulário com vídeo de fora do INES: " + ", ".join(de_fora) + "."
+
+        if escolhas:
+            tags.add(TAG_ESCOLHER_SENTIDO)
+            observacao = (observacao + " " if observacao else "") + \
+                "O INES tem mais de um sinal para " + ", ".join(escolhas) + \
+                " — o verso mostra todos, escolha pelo sentido da frase."
+            self.relatorio.escolha_de_sentido.append(
+                f"{item.texto} — {', '.join(escolhas)}"
+            )
 
         # A frase inteira sinalizada vale mais que a soma do vocabulário: ela
         # mostra a ordem e o encadeamento, que é justamente o que o card pede.
@@ -546,7 +640,33 @@ class Gerador:
 
     # -- fluxo -------------------------------------------------------------
 
+    def _indexar_externos(self, itens):
+        """Registra os `@yt` das linhas de palavra, antes de gerar nota nenhuma.
+
+        Um clipe declarado em `dormir @yt ...` vale para o sinal, não para a
+        linha: as frases que usam DORMIR devem mostrar o mesmo vídeo que o card
+        da palavra. Sem esta passagem prévia isso não teria como funcionar — as
+        listas de frases são lidas antes das de vocabulário, e o clipe ainda não
+        seria conhecido na hora de montar o verso.
+        """
+        for item in itens:
+            if item.video is None or item.tipo == listas.TIPO_FRASE:
+                continue
+            resolucao = self.indice.resolver(item.texto)
+            if not resolucao:
+                # Palavra sem verbete (LIBRAS, PAMONHA): a chave é o texto.
+                self._externo_de_texto.setdefault(
+                    indice.normalizar(item.texto), item.video
+                )
+                continue
+            # Mesma regra do card: o link vale para o primeiro verbete resolvido.
+            verbete = resolucao.verbetes[0]
+            sinal = self._por_verbete.get((verbete["ident"], verbete.get("video")))
+            if sinal is not None:
+                self._externo_de_sinal.setdefault(_chave_de_sinal(sinal), item.video)
+
     def adicionar(self, itens):
+        self._indexar_externos(itens)
         for item in itens:
             if item.problema:
                 self.relatorio.problemas.append(f"{item.local} — {item.problema}")

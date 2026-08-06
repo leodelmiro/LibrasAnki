@@ -27,7 +27,7 @@ não gosto
 
 amigo
 cinema
-cidade
+cidade @yt https://www.youtube.com/shorts/a_kP7NThPy8
 celular
 irmão
 
@@ -80,14 +80,38 @@ prato
 famoso
 paladar
 
-# PAMONHA não existe no INES. Aparece na frase da pizza, em frases-perguntas.txt,
-# e lá o verso do card continua avisando; o card próprio agora tem vídeo de fora.
+# KG não tem verbete no INES, e não é lacuna: abreviatura se soletra, K + G. O
+# que existe lá é QUILO por extenso — outro sinal, não a mesma coisa — e as
+# letras K e G separadas. O vídeo de fora mostra a abreviatura inteira, que é o
+# que a frase do kg de carne (frases-pronomes.txt) pede.
+kg @yt https://www.youtube.com/shorts/7n96xXkh9TM
+
+# MAIS OU MENOS é um sinal só, e não existe no INES. É o que se usa no lugar de
+# "em média" — daí a frase do kg de carne (frases-pronomes.txt) ter mudado. Os
+# três pedaços resolvem soltos, e por isso a expressão está em EXPRESSOES
+# (indice.py): sem isso a frase mostraria MAIS 1 + OU + MENOS1, três sinais que
+# não têm nada a ver com aproximação.
+mais ou menos @yt https://www.youtube.com/watch?v=CwjF6gWEPI0
+
+# PAMONHA não existe no INES. Aparece também na frase da pizza, em
+# frases-perguntas.txt, e o clipe daqui serve os dois cards.
 pamonha @yt https://www.youtube.com/watch?v=tnnzzJK6bFw
 
 # --- lugares e eventos ---
+# FOLGA1 e FOLGA2 têm a mesma descrição e viram um card só, de variante. O vídeo
+# de FOLGA1 dá 404 no INES, então o card vinha com o de FOLGA2; o link de fora
+# entra no lugar dele.
 
 curitiba
 parque
 congresso
-folga
+folga @yt https://www.youtube.com/watch?v=GSylJr9galg
 feriado
+
+# --- a língua ---
+# LIBRAS é falso amigo bloqueado: no INES só existe LIBRA, a unidade de peso e o
+# signo. Aparece em sete frases (frases-apostila.txt, frases-perguntas.txt,
+# frases-pronomes.txt), que eram justamente as que mais avisavam — o clipe daqui
+# serve todas elas.
+
+libras @yt http://youtube.com/shorts/8WChjExfnOg
