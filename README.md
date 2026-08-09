@@ -31,9 +31,16 @@ Lê tudo que estiver em `listas/` e escreve `out/libras.apkg`.
 -m libras_anki listas/numeros.txt -o out/numeros.apkg   só uma lista
 -m libras_anki --sem-ordinais                           sem os cards de ordinal
 -m libras_anki --atualizar-dicionario                   rebaixar o dicionário
+-m libras_anki --manter-cache                           não faxinar o cache no fim
 ```
 
 Ao final vem um relatório do que entrou e do que precisa de atenção. Nada é descartado em silêncio.
+
+**A geração faxina o cache no fim.** Saem as fontes de vídeo externo — os vídeos inteiros de onde os clipes foram recortados, que depois do clipe pronto não têm mais uso — e os vídeos que nenhuma nota referencia, de palavra que saiu das listas ou que passou a usar `@yt`. No baralho atual são cerca de 9 MB de 27 MB. O relatório diz o que saiu, e nomeia os vídeos órfãos: se uma palavra sumiu das listas sem querer, ela aparece ali.
+
+Regerar depois disso não rebaixa nada — os clipes continuam em cache, e só a fonte inteira é que foi embora. Ela só volta a ser necessária se você mudar o trecho de um `@yt`, e aí baixa de novo, uma vez.
+
+> **A faxina não roda em geração de lista avulsa.** Ali "o que não tem uso" seria o cache de todas as outras listas. `-m libras_anki listas/numeros.txt` deixa o cache intacto; `--manter-cache` desliga a faxina também na geração completa.
 
 ---
 
@@ -124,15 +131,17 @@ O aviso é o último recurso, não o primeiro. Antes dele a palavra tem duas cha
 
 ```
 ┌────────────────────────────────────────────────┐
+│ mora    [vídeo]                                │
+│ você    [vídeo]                                │
 │ Quem — Forma de identificar o proprietário…    │
 │ Quem — Forma de identificar o autor de uma…    │
 │ Quem — Forma de identificar ou nominar alguém  │
-│ mora    [vídeo]                                │
-│ você    [vídeo]                                │
 └────────────────────────────────────────────────┘
 ```
 
 Escolher sozinho seria chutar: "qual" tem três sentidos no INES e o primeiro é o de identificar um *local*, que não serve para "qual o prato mais famoso". Quem sabe qual é o certo é quem está estudando, e a informação para decidir está ali. Esses cards levam a tag `escolher-sentido`, e o relatório lista todos ao fim da geração.
+
+**O vocabulário do verso vem na ordem de LIBRAS, não na do português.** Repare no card acima: a frase é "Quem mora com você?", e o QUEM aparece **por último**. Em LIBRAS o interrogativo vai para o fim — MORAR COM VOCÊ QUEM — e o português põe na frente, que é exatamente onde se erra. Listar o vocabulário na ordem em que se lê treinaria o erro, então QUE, QUAL, QUEM, QUANDO, ONDE, COMO, QUANTO e PORQUE são movidos para o fim, e o card diz que fez isso. A frente continua sendo o português como se escreve: quem muda de ordem é o que você pratica sinalizando.
 
 **Números** — quando o INES traz dois verbetes para o mesmo número, vira card de contraste em vez de vocabulário isolado, porque a mesma mão muda de sentido pelo movimento.
 

@@ -21,7 +21,13 @@
 # verbete à parte no INES.
 
 tenho
-não tenho
+
+# "não ter" é um sinal só, não NÃO + TER em sequência — vale igual para "não
+# tenho" e "não tem". Entra com "=" para virar card de palavra: sem isso a linha
+# tem duas palavras significativas e o gerador a leria como frase, montando o
+# verso com os dois sinais separados, que é justamente o que não se faz.
+= não tenho @yt https://www.youtube.com/watch?v=zInKRWh6Qdk
+
 não quero
 não gosto
 

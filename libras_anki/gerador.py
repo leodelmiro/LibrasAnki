@@ -8,10 +8,11 @@ resto.
 """
 
 from collections import namedtuple
+from pathlib import Path
 
 import genanki
 
-from . import grupos, indice, ines, listas, midia, modelo, numeros, youtube
+from . import config, grupos, indice, ines, listas, midia, modelo, numeros, youtube
 
 TAG_FALTA_VIDEO = "falta-video"
 TAG_COMPOSTO = "composto"
@@ -172,6 +173,30 @@ NOTAS_DE_LINGUA = {
 
 TAG_ESCOLHER_SENTIDO = "escolher-sentido"
 
+# Em LIBRAS o interrogativo vai para o FIM da frase; o português põe na frente,
+# e é aí que se erra. O verso listava o vocabulário na ordem do português, o que
+# treinava justamente o erro — "Quem mora com você?" abria por QUEM, quando se
+# sinaliza MORAR COM VOCÊ QUEM.
+#
+# Declarados pela raiz do verbete, e não pela palavra da frase: assim "o que",
+# que resolve para QUE pela tabela de EXPRESSOES, entra junto sem precisar de
+# entrada própria.
+INTERROGATIVOS = frozenset(
+    "QUE QUAL ONDE COMO QUANTO QUANTOS QUEM QUANDO PORQUE".split()
+)
+
+NOTA_ORDEM_LIBRAS = ("Vocabulário na ordem de LIBRAS: o interrogativo vai para "
+                     "o fim da frase, não para o começo como no português.")
+
+
+def _caminho(arquivo):
+    """Caminho absoluto e resolvido, para comparar arquivo por identidade.
+
+    `self.arquivos` guarda string e o cache devolve Path; sem normalizar os
+    dois, a comparação erraria e a limpeza apagaria vídeo em uso.
+    """
+    return Path(arquivo).resolve()
+
 
 def _rotulo_de_sentido(palavra, sinal):
     """Rótulo de um sentido no verso da frase: a palavra e o que o INES diz dela.
@@ -206,6 +231,7 @@ class Relatorio:
         self.midia = {}
         self.externos = {}
         self.problemas = []
+        self.cache = {}
 
     def conta(self, tipo):
         self.por_tipo[tipo] = self.por_tipo.get(tipo, 0) + 1
@@ -255,6 +281,14 @@ class Relatorio:
               "o INES tem mais de um sinal; o verso mostra todos, você escolhe pelo sentido")
         bloco("PROBLEMAS NAS LISTAS", self.problemas,
               "a linha virou card, só o @yt foi ignorado — corrija e regere")
+        if self.cache:
+            linhas.append(
+                f"\ncache limpo: {self.cache['fontes']} fontes de vídeo externo e "
+                f"{len(self.cache['orfaos'])} vídeos sem uso, "
+                f"{self.cache['megabytes']:.2f} MB"
+            )
+            bloco("VÍDEOS QUE SAÍRAM DO CACHE", self.cache["orfaos"],
+                  "nenhuma nota os referencia mais — confira se alguma palavra sumiu sem querer")
         bloco("VÍDEO EXTERNO FALHOU", [
             f"{rotulo} — {motivo}" for rotulo, motivo in
             sorted(self.externos.get("falhas", {}).items())
@@ -506,9 +540,18 @@ class Gerador:
 
     def _nota_frase(self, item):
         vocabulario, ausentes, de_fora, escolhas = [], [], [], []
+        interrogativos = []
         for palavra in indice.palavras_da_frase(item.texto):
             resolucao = self.indice.resolver(palavra)
             sinais = self._sinais_de(resolucao)
+
+            # Decidido antes dos ramos abaixo porque vale para todos: a palavra
+            # é interrogativa mesmo quando o vídeo vem de fora ou não existe.
+            eh_interrogativo = (
+                indice.raiz(sinais[0].palavra) in INTERROGATIVOS if sinais
+                else indice.normalizar(palavra) in INTERROGATIVOS
+            )
+            destino = interrogativos if eh_interrogativo else vocabulario
 
             # O clipe de fora vem antes do INES, como no card da palavra: quem
             # foi atrás de outro vídeo quer estudar aquele, e ver dois vídeos
@@ -521,7 +564,7 @@ class Gerador:
             )
             par = self._par_externo(externo)
             if par:
-                vocabulario.append((palavra, par[0], par[1]))
+                destino.append((palavra, par[0], par[1]))
                 de_fora.append(palavra)
                 continue
 
@@ -540,18 +583,28 @@ class Gerador:
                 continue
             if len(blocos) == 1:
                 (_, (mp4, webm)), = blocos
-                vocabulario.append((palavra, mp4, webm))
+                destino.append((palavra, mp4, webm))
                 continue
 
             escolhas.append(f"{palavra} ({len(blocos)})")
             for sinal, (mp4, webm) in blocos:
-                vocabulario.append((_rotulo_de_sentido(palavra, sinal), mp4, webm))
+                destino.append((_rotulo_de_sentido(palavra, sinal), mp4, webm))
+
+        # O interrogativo vai para o fim, que é o lugar dele em LIBRAS. Sai daqui
+        # e não da leitura da frase para que a frente do card continue sendo o
+        # português como se escreve — quem muda de ordem é o vocabulário do
+        # verso, que é o que se pratica sinalizando.
+        reordenou = bool(interrogativos) and bool(vocabulario)
+        vocabulario += interrogativos
 
         tags = {"frase"}
         observacao = ""
         if ausentes:
             nota = [NOTAS_DE_LINGUA[p.lower()] for p in ausentes if p.lower() in NOTAS_DE_LINGUA]
             observacao = " ".join(nota)
+
+        if reordenou:
+            observacao = (observacao + " " if observacao else "") + NOTA_ORDEM_LIBRAS
 
         if de_fora:
             tags.add(youtube.TAG)
@@ -711,3 +764,52 @@ class Gerador:
         pacote = genanki.Package(self.baralho, media_files=sorted(self.arquivos))
         pacote.write_to_file(str(destino))
         return destino
+
+    # -- cache ---------------------------------------------------------------
+
+    def limpar_cache(self):
+        """Apaga o cache que o baralho recém-escrito não usa.
+
+        Só pode ser chamada depois de `escrever`, e só quando a geração cobriu
+        todas as listas: `self.arquivos` é a resposta para "o que tem uso", e
+        numa geração de lista avulsa ela descreve um pedaço do baralho, não o
+        baralho. Quem decide isso é a linha de comando, que sabe o que foi
+        pedido; aqui não há como distinguir.
+
+        Duas coisas saem, por motivos diferentes:
+
+          fontes    o vídeo inteiro de onde os clipes foram recortados. Depois
+                    do clipe pronto ele não tem uso nenhum — só voltaria a ter
+                    se um trecho `@yt` mudasse, e aí baixa de novo.
+          órfãos    vídeo em cache que nenhuma nota referencia mais, de palavra
+                    que saiu das listas ou que passou a usar vídeo de fora.
+                    Inclui os `.tmp` de uma escrita interrompida.
+
+        O dicionário em `.cache/dados` nunca entra: ele é a base, não mídia de
+        card, e rebaixá-lo custa muito mais que os poucos MB que ocupa.
+        """
+        usados = {_caminho(a) for a in self.arquivos}
+        fontes, orfaos, bytes_apagados = 0, [], 0
+
+        for arquivo in sorted(config.CACHE_EXTERNOS.glob("*")):
+            if not arquivo.is_file():
+                continue
+            bytes_apagados += arquivo.stat().st_size
+            arquivo.unlink()
+            fontes += 1
+
+        for arquivo in sorted(config.CACHE_VIDEOS.glob("*")):
+            if not arquivo.is_file() or _caminho(arquivo) in usados:
+                continue
+            bytes_apagados += arquivo.stat().st_size
+            arquivo.unlink()
+            # Os dois formatos do mesmo sinal viram uma linha só no relatório:
+            # o que interessa é qual palavra saiu, não que ela tinha mp4 e webm.
+            orfaos.append(arquivo.stem)
+
+        self.relatorio.cache = {
+            "fontes": fontes,
+            "orfaos": sorted(set(orfaos)),
+            "megabytes": bytes_apagados / 1048576,
+        }
+        return self.relatorio.cache

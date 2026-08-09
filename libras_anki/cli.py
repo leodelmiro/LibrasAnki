@@ -35,6 +35,10 @@ def _argumentos(argv):
         "--atualizar-dicionario", action="store_true",
         help="baixar o dicionário de novo em vez de usar o cache",
     )
+    parser.add_argument(
+        "--manter-cache", action="store_true",
+        help="não apagar as fontes de vídeo externo nem os vídeos sem uso",
+    )
     return parser.parse_args(argv)
 
 
@@ -71,6 +75,13 @@ def main(argv=None):
     destino = config.RAIZ / args.saida if args.saida else config.SAIDA / "libras.apkg"
     destino.parent.mkdir(parents=True, exist_ok=True)
     motor.escrever(destino)
+
+    # Só limpa quando a geração cobriu todas as listas. Numa lista avulsa o que
+    # o baralho usa é um pedaço do acervo, e apagar "o que não tem uso" apagaria
+    # o cache de todas as outras listas — dezenas de downloads, a partir de um
+    # comando que parece inofensivo.
+    if not args.listas and not args.manter_cache:
+        motor.limpar_cache()
 
     print()
     print(motor.relatorio.texto())

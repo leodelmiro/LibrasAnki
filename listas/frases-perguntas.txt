@@ -10,9 +10,10 @@
 #     Quanto é um kg de carne?           UM KG CARNE QUANTO
 #     Por que você estuda Libras?        VOCÊ ESTUDAR LIBRAS PORQUE
 #
-# Os cards mostram só a frase em português e os vídeos do vocabulário — a ordem
-# você treina sinalizando, não decorando notação. As linhas acima ficam aqui
-# como referência de estudo.
+# O verso do card já mostra o vocabulário nesta ordem: o interrogativo vai para
+# o fim, como nas glosas acima. A frente continua sendo o português como se
+# escreve — a ordem você treina sinalizando, não decorando notação. As linhas
+# acima ficam aqui como referência de estudo.
 #
 # "por que" e "porque" são o mesmo sinal: a distinção é ortografia do português,
 # não da língua. O par está em EXPRESSOES (indice.py), que o reconhece antes de
