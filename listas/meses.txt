@@ -1,0 +1,32 @@
+# Meses do ano
+#
+# Cobertura completa: os doze meses têm verbete no INES, e MÊS também. Nenhuma
+# lacuna aqui — o que existe são três armadilhas da base.
+#
+# MAIO colide com MAIÔ, o traje de banho: sem acento as duas viram a mesma
+# chave, e o mês geraria também um card de roupa de piscina. MAIÔ está em
+# IGNORADOS (indice.py), como CARNÊ já estava — o termo resolve normalmente, só
+# o verbete parasita sai do índice.
+#
+# AGOSTO tem dois verbetes com a mesma descrição, então é variante e não
+# homônimo: um card só, com os dois vídeos. Mesmo caso de FOLGA1/FOLGA2.
+#
+# JUNHO e AGOSTO1 declaram nome de arquivo que o servidor não entrega
+# ("junho1Sm", "agostoSm") enquanto o certo está lá ("junhoSm", "agosto1Sm").
+# É erro de cadastro do INES, não lacuna: a variante de sufixo recupera os dois
+# (midia.py) e os cards levam a tag `video-renomeado`.
+
+mês
+
+janeiro
+fevereiro
+março
+abril
+maio
+junho
+julho
+agosto
+setembro
+outubro
+novembro
+dezembro

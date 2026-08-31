@@ -1,0 +1,35 @@
+# Frases de família
+#
+# As 11 estão cobertas por inteiro: nenhuma palavra ficou sem sinal. Nada disso
+# era lacuna do dicionário — o que faltava eram entradas nas tabelas de
+# indice.py, e cada uma tem seu motivo:
+#
+#     flexão       conheci, nasceu, compras, trabalha, vão, faz, ajuda,
+#                  ensino, são, outra          -> LEMAS
+#     gênero       amiga, cunhada, sogra, prima -> SINONIMOS, o INES só
+#                  e número                       cataloga o masculino
+#     escrita      avó, avós — os verbetes se chamam "AVÔ/AVÓ1" e "AVÔ/AVÓ2",
+#                  e a barra do meio do nome não sobrevive à normalização;
+#                  caem em VOVÓ-VOVÔ, o sinal que "vô"/"vó" já ensinam
+#     sigla        EUA -> ESTADOS UNIDOS, que é como a base registra
+#     sem verbete  bastante -> MUITO, decidido na aula
+#
+# O plural também deixou de falhar onde o singular passava: "avós", "amigas" e
+# "cunhadas" agora reaplicam lema e sinônimo sobre o singular.
+#
+# Várias palavras oferecem escolha de sentido no verso, porque o INES tem mais
+# de um sinal para elas — MUITO tem três verbetes, CENTRO três, PERTO dois,
+# MÉDIO dois, BOLO dois, AJUDAR dois, IR seis. O verso mostra todos rotulados
+# pela descrição; quem escolhe é quem está sinalizando.
+
+Gosto de almoçar aos domingos com meus avós
+Minha tia mora em outra cidade
+Conheci meu primo que nasceu no fim de semana. É um lindo bebê!
+Gosto de fazer compras com minha mãe e minha irmã, é divertido!
+Meu pai trabalha no centro da cidade
+Meus sobrinhos vão viajar esse mês para os EUA
+Gosto do bolo de chocolate que minha avó faz
+Minha sogra mora perto de mim e me ajuda bastante
+Meus filhos estão no ensino médio
+Tenho 3 cunhadas e 2 cunhados
+Minha amiga mora com o pai e a madrasta, as duas são muito amigas.
