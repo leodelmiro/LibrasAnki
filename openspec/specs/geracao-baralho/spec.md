@@ -119,6 +119,8 @@ O relatório MUST listar as formas incorretas com o sinal que as substituiu, e o
 
 O relatório MUST registrar os problemas de escrita das próprias listas, com origem e número da linha, e MUST registrar as falhas de obtenção de vídeo externo com o motivo. Nenhum dos dois MUST interromper a geração.
 
+O relatório MUST listar as frases cujo verso oferece escolha de sentido, nomeando as palavras e quantas opções cada uma tem. Essa é a lista do que perguntar na aula: cada linha é uma escolha que o dicionário não soube fazer e que o baralho está deixando em aberto de propósito.
+
 #### Scenario: Resumo ao final
 
 - **WHEN** a geração termina
@@ -163,6 +165,11 @@ O relatório MUST registrar os problemas de escrita das próprias listas, com or
 
 - **WHEN** um item que declara vídeo externo resolve para mais de um sinal no INES
 - **THEN** o relatório informa que o vídeo foi aplicado ao primeiro e nomeia qual foi
+
+#### Scenario: Frases com escolha de sentido listadas
+
+- **WHEN** o verso de uma frase oferece mais de um sinal para alguma palavra
+- **THEN** o relatório lista a frase com as palavras afetadas e a quantidade de opções de cada uma
 
 ### Requirement: Modelo de nota por tipo de item
 

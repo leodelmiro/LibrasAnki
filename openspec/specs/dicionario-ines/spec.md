@@ -35,6 +35,12 @@ A remoção do sufixo numérico MUST tolerar espaço antes do número. A base us
 
 O sistema MUST poder excluir verbetes do índice quando a normalização os tornar indistinguíveis de outro de sentido sem relação. O termo pedido MUST continuar resolvendo normalmente; apenas o verbete excluído MUST NOT aparecer no resultado. Isso é distinto do bloqueio de falso amigo, que recusa o termo inteiro e devolve o motivo.
 
+Ao extrair as palavras significativas de uma frase, o sistema MUST reconhecer sequências de palavras declaradas como um sinal único, e MUST fazê-lo antes de descartar as palavras funcionais. Depois do descarte a informação necessária não existe mais: em "por que", `que` é funcional e sairia, e `por` sozinho é falso amigo do verbo colocar.
+
+A sequência reconhecida MUST substituir as palavras que a compõem por um único item de vocabulário, e o casamento MUST ser tentado da sequência mais longa para a mais curta, para que uma expressão que comece igual a outra não seja partida pela mais curta.
+
+O que a tabela declara MUST ser um termo a resolver, e não um verbete escolhido. Assim uma expressão que corresponda a uma palavra de vários sentidos continua devolvendo todos eles, em vez de a tabela fixar um sentido de passagem.
+
 #### Scenario: Correspondência direta
 
 - **WHEN** a lista contém `casa`
@@ -79,6 +85,26 @@ O sistema MUST poder excluir verbetes do índice quando a normalização os torn
 
 - **WHEN** dois verbetes de sentidos sem relação viram a mesma chave depois da normalização e um deles está na lista de excluídos
 - **THEN** o termo resolve apenas para o verbete mantido, e uma única nota é gerada
+
+#### Scenario: Expressão cujos pedaços são funcionais
+
+- **WHEN** a frase contém `O que`, cujas duas palavras seriam descartadas como funcionais
+- **THEN** a sequência é reconhecida antes do descarte e vira um item de vocabulário, em vez de a expressão sumir da frase
+
+#### Scenario: Expressão cujo pedaço é falso amigo
+
+- **WHEN** a frase contém `Por que`
+- **THEN** a sequência resolve para o sinal da pergunta, sem que `por` sozinho chegue ao bloqueio de falso amigo
+
+#### Scenario: Expressão cujos pedaços resolvem para sinais errados
+
+- **WHEN** a frase contém `mais ou menos`, cujas três palavras resolvem individualmente para sinais de comparação, alternativa e subtração
+- **THEN** a sequência é reconhecida como um item só, e os três sinais avulsos não entram no vocabulário
+
+#### Scenario: Expressão que corresponde a palavra de vários sentidos
+
+- **WHEN** a sequência reconhecida resolve para uma palavra que tem mais de um verbete no INES
+- **THEN** todos os verbetes são devolvidos, porque a tabela declara um termo e não um verbete
 
 ### Requirement: Classificação de grupos com sufixo numérico
 
