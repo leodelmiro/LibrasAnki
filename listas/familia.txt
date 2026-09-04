@@ -1,7 +1,7 @@
 # Família
 #
-# Três casos em que um sinal cobre o que o português separa — não é lacuna do
-# INES, é como a língua funciona:
+# Casos em que um sinal cobre o que o português separa — não é lacuna do INES,
+# é como a língua funciona:
 #
 #     vô / vó    um verbete só, VOVÓ-VOVÔ ("o avô, pai do pai ou da mãe;
 #                a avó, mãe do pai ou da mãe")
@@ -9,18 +9,70 @@
 #                marcar gênero — "irmã" cai no mesmo sinal
 #     mãe        o verbete é MAMÃE, não MÃE
 #
-# TIA e TIO não existem no INES em forma nenhuma (o único verbete parecido é
-# TIARA), e o vídeo de VOVÓ-VOVÔ dá 404 no servidor. Os dois vêm de fora agora.
-# "vó" não leva link: cai no mesmo verbete de "vô", então é um card só.
+# Os femininos de parentesco seguem o mesmo caminho de IRMÃ: o INES cataloga só
+# o masculino, e FILHA, SOBRINHA, CUNHADA, SOGRA e PRIMA caem nele por SINONIMOS
+# (indice.py). Em dois deles o dicionário sustenta a leitura sozinho — PRIMO é
+# "o filho OU A FILHA de sua tia", CUNHADO é "o irmão (OU IRMÃ) do seu marido ou
+# da sua mulher". FILHA, SOBRINHA e SOGRA não têm essa ressalva: se a aula
+# mostrar que o gênero é marcado (o sinal mais MULHER), são as três a corrigir.
+#
+# TIA e TIO não existem no INES em forma nenhuma — o único verbete parecido é
+# TIARA. As duas linhas levam o mesmo link: é reaproveitamento decidido, não
+# sinal confirmado, e vale conferir na aula se tio e tia se distinguem.
+#
+# "avô" e "avó" não entram como linha: caem no mesmo card de "vô"/"vó" por
+# SINONIMOS, que é o que as frases precisam. Os quatro verbetes de avós do INES
+# (VOVÓ-VOVÔ1-2 e AVÔ/AVÓ1-2) dão 404 no servidor, então o sinal vem do link
+# abaixo. "vó" não leva link: cai no mesmo verbete de "vô", é um card só.
 
 mãe
 pai
 vô @yt https://www.youtube.com/watch?v=jO1lFXFVIvo
 vó
+filho
+filha
 irmão
 irmã
 família
+tio @yt https://www.youtube.com/watch?v=1Zxj4NDW2QE
 tia @yt https://www.youtube.com/watch?v=1Zxj4NDW2QE
+primo
+prima
+sobrinho
+sobrinha
+mão
+
+# --- por casamento ---
+# NORA declara "nora2Sm_Prog001.mp4", que dá 404, com "noraSm_Prog001.mp4" no
+# servidor — nome errado na base, recuperado pela variante de sufixo (midia.py).
+# O card leva a tag `video-renomeado`.
+
+esposa
+sogro
+sogra
+genro
+nora
+cunhado
+cunhada
+padrasto
+madrasta
+
+# --- gerações ---
+# BISAVÓ é verbete único e cobre os dois: "aquele que é o pai do avô ou da avó".
+
+bisavô
+bisavó
+adotivo
+
+# --- estado civil ---
+# NOIVAR não tem verbete: a base cataloga o substantivo NOIVO, com dois
+# verbetes de descrições diferentes, que viram dois cards. O lema está em
+# indice.py. Se a aula mostrar que o verbo tem sinal próprio, vira @yt.
+
+solteiro
+namorar
+noivar
+casar
 
 pessoal
 sozinho

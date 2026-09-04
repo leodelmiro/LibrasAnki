@@ -225,6 +225,7 @@ class Relatorio:
         self.compostos = []
         self.correcoes = []
         self.mesmo_sinal = []
+        self.video_renomeado = []
         self.video_suspeito = []
         self.grupo_misto = []
         self.escolha_de_sentido = []
@@ -273,6 +274,8 @@ class Relatorio:
               "não existe em LIBRAS; o card mostra o sinal correto")
         bloco("VÍDEO EMPRESTADO", self.mesmo_sinal,
               "o vídeo próprio dá 404 no INES; é o mesmo sinal de outro verbete")
+        bloco("VÍDEO RENOMEADO", self.video_renomeado,
+              "o nome declarado no INES dá 404; o arquivo está lá sob outro sufixo")
         bloco("VÍDEO SUSPEITO", self.video_suspeito,
               "o mesmo arquivo é usado por outro verbete — confira antes de decorar")
         bloco("GRUPO MISTO", self.grupo_misto,
@@ -304,7 +307,9 @@ class Gerador:
         self.tabelas = ines.obter_tabelas()
         self.indice = indice.Indice(self.verbetes)
         self.sinais, self.anomalias = grupos.construir(self.verbetes)
-        self.recursos = midia.Midia()
+        self.recursos = midia.Midia(
+            declarados={v["video"] for v in self.verbetes if v.get("video")}
+        )
         self.externos = youtube.Externos()
         self.baralho = modelo.criar_baralho(nome_baralho)
         self.relatorio = Relatorio()
@@ -398,6 +403,22 @@ class Gerador:
                 observacao += " O INES também tem vídeo próprio para esta palavra."
         else:
             pares = self._pares(sinal.videos)
+            # O INES declarou nome de arquivo que o servidor não entrega, e o
+            # vídeo veio de uma variante do nome. O card diz de onde, como já
+            # faz com o vídeo emprestado de outro verbete.
+            renomeados = [
+                (v, self.recursos.renomeados[v])
+                for v in sinal.videos
+                if v in self.recursos.renomeados
+            ]
+            if renomeados:
+                tags.add(midia.TAG_VIDEO_RENOMEADO)
+                usados = ", ".join(usado for _, usado in renomeados)
+                observacao = (
+                    f"{observacao} O nome de arquivo declarado no INES dá 404; "
+                    f"o vídeo veio de {usados}, no mesmo servidor."
+                ).strip()
+
 
         nome = indice.raiz(sinal.palavra)
         if not pares and nome in MESMO_SINAL:
@@ -761,9 +782,24 @@ class Gerador:
     def escrever(self, destino):
         self.relatorio.midia = self.recursos.resumo()
         self.relatorio.externos = self.externos.resumo()
+        self._relatar_renomeados()
         pacote = genanki.Package(self.baralho, media_files=sorted(self.arquivos))
         pacote.write_to_file(str(destino))
         return destino
+
+    def _relatar_renomeados(self):
+        """Lista os vídeos recuperados por variante de nome.
+
+        Sai daqui, e não de `_nota_de_sinal`, para não perder a palavra que só
+        aparece dentro de uma frase: o verso da frase baixa o vídeo sem passar
+        por lá, e a recuperação ficaria fora do relatório.
+        """
+        dono = {v["video"]: v["palavra"] for v in self.verbetes if v.get("video")}
+        for declarado, usado in self.recursos.renomeados.items():
+            palavra = dono.get(declarado, declarado)
+            self.relatorio.video_renomeado.append(
+                f"{palavra}: {declarado} -> {usado}"
+            )
 
     # -- cache ---------------------------------------------------------------
 

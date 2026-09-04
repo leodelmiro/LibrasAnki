@@ -16,16 +16,23 @@ from collections import defaultdict
 # biblioteca de stemming acertaria mais casos, mas erraria em silêncio nos que
 # importam. Quando esta tabela começar a doer, aí vale trocar.
 LEMAS = {
+    "AJUDA": "AJUDAR",
     "APRENDENDO": "APRENDER",
     "CHEGUEI": "CHEGAR",
     # O INES cataloga o verbo, não o particípio nem o substantivo derivado.
     "ATRASADO": "ATRASAR",
     "DESCANSO": "DESCANSAR",
     "DESCULPA": "DESCULPAR",
+    "ENSINO": "ENSINAR",
+    # Caminho inverso dos de cima: aqui a base cataloga o substantivo e não o
+    # verbo. NOIVO1 e NOIVO2 têm descrições diferentes e viram dois cards.
+    "NOIVAR": "NOIVO",
     "ESTA": "ESTAR",
     "ESTAO": "ESTAR",
     "ESTOU": "ESTAR",
     "COMECOU": "COMEÇAR",
+    "COMPRAS": "COMPRAR",
+    "CONHECI": "CONHECER",
     "DORMI": "DORMIR",
     "ESTUDA": "ESTUDAR",
     "ESTUDEI": "ESTUDAR",
@@ -35,17 +42,23 @@ LEMAS = {
     # o substantivo GOSTO ("o que é percebido pelo paladar"). Um lema nunca
     # chegaria a rodar. Escreva "gostar" para o verbo — e "paladar" para o
     # sentido, que tem verbete próprio.
+    "FAZ": "FAZER",
     "PREFERIDO": "PREFERIR",
     "QUER": "QUERER",
     "QUERO": "QUERER",
     "MINHA": "MEU",
     "MORA": "MORAR",
+    "NASCEU": "NASCER",
+    "OUTRA": "OUTRO",
     "SAIU": "SAIR",
+    "SAO": "SER",
     "TEM": "TER",
     "TEMOS": "TER",
     "TENHO": "TER",
+    "TRABALHA": "TRABALHAR",
     "VAI": "IR",
     "VAMOS": "IR",
+    "VAO": "IR",
     "VOCES": "VOCE",
     "VOU": "IR",
 }
@@ -72,9 +85,37 @@ SINONIMOS = {
     # "o avô, pai do pai ou da mãe; a avó, mãe do pai ou da mãe". Como "vô" e
     # "vó" normalizam os dois para "VO", uma entrada cobre o par.
     "VO": "VOVÓ-VOVÔ",
+    # "avô" e "avó" caem no mesmo sinal, mas por um caminho que a normalização
+    # não faz sozinha. O INES tem um segundo par de verbetes — "AVÔ/AVÓ1" e
+    # "AVÔ/AVÓ2" — que nenhuma escrita alcança: a normalização tira acento e
+    # caixa, não a barra do meio do nome. E os dois dão 404 no servidor, assim
+    # como VOVÓ-VOVÔ1 e VOVÓ-VOVÔ2 — o sinal vem do @yt declarado em "vô".
+    # Apontar para VOVÓ-VOVÔ é cair no card que já existe e já tem vídeo.
+    "AVO": "VOVÓ-VOVÔ",
     # IRMÃO é descrito genericamente ("filhos do mesmo pai e da mesma mãe"),
     # sem marcar gênero — mesmo caso de ELE/ELA.
     "IRMA": "IRMÃO",
+    # Femininos de parentesco: o INES cataloga só o masculino, como já fazia
+    # com IRMÃO. Em dois deles o próprio verbete descreve os dois gêneros —
+    # PRIMO é "o filho OU A FILHA de sua tia", CUNHADO é "o irmão (OU IRMÃ) do
+    # seu marido ou da sua mulher". FILHA, SOBRINHA e SOGRA não têm essa
+    # ressalva no dicionário e são as primeiras a confirmar na aula: se o
+    # gênero for marcado (o sinal mais MULHER), estas três linhas saem e viram
+    # @yt, sem mexer em código.
+    "FILHA": "FILHO",
+    "SOBRINHA": "SOBRINHO",
+    "CUNHADA": "CUNHADO",
+    "SOGRA": "SOGRO",
+    "PRIMA": "PRIMO",
+    # Vocabulário das frases de família. "duas" e "amiga" são flexão de gênero,
+    # e o INES cataloga só uma das formas. "EUA" é sigla: o verbete está pelo
+    # nome por extenso. "bastante" não tem verbete e é MUITO — decidido na
+    # aula; MUITO tem três verbetes de descrições distintas, então a palavra
+    # cai no mecanismo de escolha de sentido do verso da frase.
+    "DUAS": "DOIS",
+    "AMIGA": "AMIGO",
+    "EUA": "ESTADOS UNIDOS",
+    "BASTANTE": "MUITO",
 }
 
 # Falsos amigos: termos que a normalização resolveria para um verbete de sentido
@@ -100,6 +141,9 @@ IGNORADOS = {
     # "carne" e "CARNÊ" viram a mesma chave quando a normalização tira o acento.
     # CARNÊ é bloco de pagamento — nada a ver com o alimento, e fora do escopo.
     "CARNÊ",
+    # Mesmo caso: sem acento, "MAIÔ" vira a chave de "MAIO". O traje de banho
+    # não tem nada a ver com o mês do calendário.
+    "MAIÔ",
 }
 
 # O currículo escreve números como dígito ("dormir às 10 horas"), a base os
@@ -210,26 +254,37 @@ class Indice:
                 return Resolucao(termo, achados, "sem-sufixo", chave_raiz)
 
         # 4. plural simples
-        if chave.endswith("S"):
-            achados = self._buscar(chave[:-1])
+        singular = chave[:-1] if chave.endswith("S") else None
+        if singular:
+            achados = self._buscar(singular)
             if achados:
-                return Resolucao(termo, achados, "plural", chave[:-1])
+                return Resolucao(termo, achados, "plural", singular)
 
-        # 5. tabela de lematização
-        lema = LEMAS.get(chave)
-        if lema:
-            achados = self._buscar(normalizar(lema))
-            if achados:
-                return Resolucao(termo, achados, "lema", lema)
-
-        # 6. tabela de sinônimos
-        sinonimo = SINONIMOS.get(chave)
-        if sinonimo:
-            achados = self._buscar(normalizar(sinonimo))
-            if achados:
-                return Resolucao(termo, achados, "sinonimo", sinonimo)
+        # 5. e 6. tabelas de lematização e de sinônimos, na forma pedida e —
+        # se ela for plural — também no singular. Sem a segunda passada o
+        # plural falha justamente onde o singular resolveria: "cunhadas" para
+        # e "cunhada" passa, e a alternativa seria repetir cada entrada das
+        # tabelas nas duas formas, esquecendo a segunda em silêncio.
+        resolucao = self._por_tabela(termo, chave)
+        if resolucao:
+            return resolucao
+        if singular:
+            resolucao = self._por_tabela(termo, singular)
+            if resolucao:
+                return resolucao
 
         return Resolucao(termo)
+
+    def _por_tabela(self, termo, chave):
+        """Tenta lema e depois sinônimo para uma chave. None se nenhum resolver."""
+        for tabela, via in ((LEMAS, "lema"), (SINONIMOS, "sinonimo")):
+            alvo = tabela.get(chave)
+            if not alvo:
+                continue
+            achados = self._buscar(normalizar(alvo))
+            if achados:
+                return Resolucao(termo, achados, via, alvo)
+        return None
 
     def resolver_muitos(self, termos):
         """Resolve vários termos; devolve (resolvidos, nao_resolvidos)."""
@@ -243,7 +298,8 @@ class Indice:
 # Palavras funcionais que não têm sinal próprio e não devem contar como falha
 # ao analisar uma frase.
 VAZIAS = frozenset(
-    "O A OS AS DE DO DA DOS DAS EM NO NA NUM UM UMA E AO AOS À ÀS PARA COM SE QUE".split()
+    "O A OS AS DE DO DA DOS DAS EM NO NA NUM UM UMA E AO AOS À ÀS PARA COM SE QUE "
+    "ME".split()
 )
 
 # Sequências de palavras que são um sinal só. Precisam ser reconhecidas antes da

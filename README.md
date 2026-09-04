@@ -174,7 +174,19 @@ Os tempos aceitam `M:SS`, `H:MM:SS` ou segundos. Vale também em linha de frase 
 
 **O link tem prioridade.** Numa palavra que o INES já cobre, o vídeo de fora *substitui* o do INES no card: se você foi atrás de outro vídeo, é ele que você quer decorar. O card registra a troca na observação e leva a tag `video-externo`, então dá para achar todos depois.
 
-**O link vale para o sinal, não para a linha.** Declarado uma vez, o clipe também aparece no verso das frases que usam aquela palavra — e vence o vídeo do INES lá também, para você não decorar duas versões do mesmo sinal. É o que resolve as palavras cujo vídeo o INES cadastra mas não entrega: `DORMIR` aponta para `dormir2Sm_Prog001.mp4`, que dá 404, e sem o clipe as duas frases com o verbo caíam no aviso. A frase leva a tag `video-externo` e diz na observação quais palavras vieram de fora. Vale também para palavra sem verbete nenhum: um `@yt` em `libras` cobre as sete frases que falam de Libras.
+**O link vale para o sinal, não para a linha.** Declarado uma vez, o clipe também aparece no verso das frases que usam aquela palavra — e vence o vídeo do INES lá também, para você não decorar duas versões do mesmo sinal. A frase leva a tag `video-externo` e diz na observação quais palavras vieram de fora. Vale também para palavra sem verbete nenhum: um `@yt` em `libras` cobre as sete frases que falam de Libras.
+
+### Quando o INES declara o nome de arquivo errado
+
+Parte dos verbetes aponta para um vídeo que o servidor não entrega, com o arquivo certo lá sob **outro sufixo numérico**. `JUNHO` aponta `junho1Sm_Prog001.mp4`, que dá 404, enquanto `junhoSm_Prog001.mp4` responde normalmente. Erro de cadastro da base, não lacuna da língua.
+
+Quando o download falha, o gerador tenta o mesmo nome com o sufixo trocado e usa o primeiro que responder. O card leva `video-renomeado` e diz na observação de qual arquivo o vídeo veio.
+
+**Um candidato só é aceito se nenhum outro verbete o declarar como seu.** Sem essa guarda a recuperação serviria o sinal do vizinho: `SER2` aponta `ser3Sm`, que dá 404, e o primeiro nome que responde é `ser1Sm` — o vídeo de `SER1`, que é outro sinal. Ele é recusado, e `SER2` fica com `ser2Sm`.
+
+A tentativa só acontece **depois** de o nome declarado falhar, nunca antes. É o que faz a nota voltar sozinha ao vídeo dela se o INES corrigir o cadastro — e o que impede que `AGOSTO2`, cujo vídeo funciona, seja atendido pelo arquivo que a recuperação do `AGOSTO1` acabou de gravar no cache.
+
+Quando nem isso resolve, sobra o `@yt`: os quatro verbetes de avós do INES dão 404 e nenhum tem variante que responda, então o sinal vem de fora.
 
 Funciona com qualquer site que o [yt-dlp](https://github.com/yt-dlp/yt-dlp) suporte, não só YouTube. Cada vídeo é baixado inteiro uma vez para `.cache/externos/` e recortado dali — um vídeo de aula de dez minutos serve dezenas de sinais pagando um download só. Os clipes saem em WebM e MP4, como os do INES, e ficam limitados a 480 px de largura.
 
@@ -188,6 +200,8 @@ Se um download falhar (link fora do ar, rede caída), o card volta ao que era �
 |---|---|
 | `falta-video` | sem vídeo no INES — grave na aula |
 | `video-externo` | o vídeo veio de um link `@yt`, não do INES |
+| `video-renomeado` | o nome de arquivo declarado no INES dá 404; o vídeo veio de outro sufixo, no mesmo servidor |
+| `mesmo-sinal` | o vídeo próprio dá 404; é o mesmo sinal de outro verbete, e o card usa o dele |
 | `forma-incorreta` | não existe em LIBRAS; o card mostra o sinal correto no lugar |
 | `composto` | sem verbete próprio; o card mostra os componentes em sequência |
 | `confirmar-sinal` | a escolha do componente saiu por eliminação — confirme na aula |
