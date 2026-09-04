@@ -1,8 +1,58 @@
 # Cores
 #
-# PRETO tem dois verbetes no INES, com descrições diferentes — viram dois cards
-# separados, como qualquer homônimo. Confira qual a professora usa.
+# PRETO e ROXO têm dois verbetes cada, com a MESMA descrição — são variante, não
+# homônimo, e viram um card só com os dois vídeos. (O comentário anterior daqui
+# dizia que PRETO virava dois cards separados; estava errado.)
+#
+# BRANCO e CINZA são homônimo de verdade, e aí sim são dois cards cada. Só um
+# de cada par é cor:
+#
+#     BRANCO1   "da cor da neve, do cal, do leite"          <- a cor
+#     BRANCO2   "alguém que tem a pele muito clara"
+#     CINZA1    "cor de chumbo; mistura de preto com branco" <- a cor
+#     CINZA2    "resíduo mineral da combustão"
+#
+# O vídeo de BRANCO1 dá 404 no INES, com "branco1Sm_Prog001.mp4" respondendo no
+# servidor — nome errado na base, recuperado pela variante de sufixo (midia.py).
+# O card leva a tag `video-renomeado`.
+#
+# LILÁS tem verbete, mas o vídeo dá 404 e nenhuma variante de nome responde —
+# ao contrário de BRANCO1, aqui o arquivo não está no servidor sob nome nenhum.
+# Vem de fora agora.
+#
+# Ficaram de fora as palavras cujo verbete no INES NÃO é a cor. Todas resolvem,
+# e é justamente esse o problema: o card sairia completo ensinando outra coisa.
+#
+#     laranja   o verbete é o fruto ("tem casca..."), não a cor — e já está no
+#               baralho como comida, em vocabulario-diverso.txt
+#     violeta   a flor
+#     vinho     a bebida
+#     creme     o laticínio
+#     ouro      o metal; a cor é DOURADO, que está aqui
+#     prata     o metal; a cor é PRATEADO, que está aqui
+#     claro     três verbetes, nenhum é a cor: "dito com clareza", "sem nuvens"
+#               e a expressão de concordância
+#
+# TURQUESA e SALMÃO não existem no INES em forma nenhuma.
 
-vermelho
-verde
+cor
+
+branco
 preto
+vermelho
+azul
+verde
+amarelo
+rosa
+roxo
+marrom
+cinza
+lilás @yt https://www.youtube.com/watch?v=4LD7raiU8xA
+bege
+
+# --- metálicas e modificadores ---
+
+dourado
+prateado
+colorido
+escuro
