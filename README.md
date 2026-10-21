@@ -236,12 +236,7 @@ out/              baralhos gerados
 openspec/         proposta, design, specs e tarefas
 ```
 
-O plano completo e as decisões técnicas estão em `openspec/changes/libras-anki-deck/`:
-
-```
-openspec show libras-anki-deck
-openspec status --change libras-anki-deck
-```
+O projeto foi planejado com [OpenSpec](https://github.com/Fission-AI/OpenSpec). As specs vigentes estão em `openspec/specs/`, e o histórico de cada mudança — proposta, design, specs e tarefas — em `openspec/changes/archive/`. O plano original e as decisões técnicas estão em `openspec/changes/archive/2026-07-30-libras-anki-deck/`.
 
 ---
 
@@ -249,9 +244,11 @@ openspec status --change libras-anki-deck
 
 Os vídeos vêm do dicionário do INES, material público do governo brasileiro, usados aqui para **estudo pessoal**. O `.apkg` gerado não é para redistribuição.
 
+A [licença MIT](LICENSE) cobre o código deste repositório, não os vídeos: eles continuam sendo do INES e de seus autores.
+
 Os clipes trazidos por `@yt` são de terceiros e ficam sob a mesma regra: estudo pessoal, sem redistribuir. Baixar vídeo do YouTube contraria os termos de serviço deles, ainda que para uso próprio — vale saber, e decidir.
 
-O dicionário tem lacunas e alguns erros — o projeto trata isso explicitamente em vez de esconder. Palavras sem material viram cards marcados em vez de sumirem em silêncio, e verbetes com dado inconsistente recebem aviso. O raciocínio por trás de cada tratamento está em `openspec/changes/libras-anki-deck/design.md`.
+O dicionário tem lacunas e alguns erros — o projeto trata isso explicitamente em vez de esconder. Palavras sem material viram cards marcados em vez de sumirem em silêncio, e verbetes com dado inconsistente recebem aviso. O raciocínio por trás de cada tratamento está em `openspec/changes/archive/2026-07-30-libras-anki-deck/design.md`.
 
 Dois detalhes que valem saber ao estudar:
 
